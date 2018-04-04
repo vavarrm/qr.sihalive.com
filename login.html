@@ -1,0 +1,50 @@
+
+<!doctype html>
+<html lang="zh-Hans" ng-app="pokerInsuranceApp">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<meta name="description" content="">
+	<meta name="author" content="">
+	<title>保险计算机/Insurance computer</title>
+	<!-- jquery-ui.css -->
+	<link rel="stylesheet" href="/css/jquery-ui/1.12.1/jquery-ui.min.css">
+	<!-- Bootstrap core CSS -->
+	<link href="/css/bootstrap/bootstrap.min.css" rel="stylesheet">
+	<!-- customer CSS -->
+	<link href="/css/frondend/login.css" rel="stylesheet">
+	<link rel="icon" href="images/favicon.ico" type="image/x-icon" />
+</head>
+<body ng-controller="LoginCtrl">
+	<div class="container">
+		<div class="card card-container">
+			<img id="profile-img" class="profile-img-card" src="//ssl.gstatic.com/accounts/ui/avatar_2x.png" />
+			<p id="profile-name" class="profile-name-card"></p>
+			<form class="form-signin">
+				<span id="reauth-email" class="reauth-email"></span>
+				<input type="text" maxlength="12" ng-model="input.account"  class="form-control" placeholder="帐号/Account" required autofocus>
+				<input type="password" maxlength="12" ng-model="input.password" class="form-control" placeholder="密码/Password" required>
+				<button ng-click="login()" class="btn btn-lg btn-primary btn-block btn-signin" type="submit">登入/Sing in</button>
+			</form><!-- /form -->
+		</div><!-- /card-container -->
+	</div><!-- /container -->
+	<div  ng-include="'/views/dialog.html'"></div>
+	<div class="footer-copyright py-3 text-center">
+        © 2018 Copyright:
+        <a href="http://www.sihalive.com/">sihalive</a>
+    </div>
+	<!-- jquery -->
+	<script src="/js/jquery/1.12.4/jquery.min.js" ></script>	
+	<!-- bootstrp-->
+	<script src="/js/bootstrap/bootstrap.min.js"></script>
+	<!-- jQuery UI -->
+    <script src="/js/jquery-ui/1.12.1/jquery-ui.min.js"></script>
+	<!-- angular -->
+	<script src="/js/angular/angular.min.js"></script>
+	<script src="/js/angular/angular-route.min.js"></script>
+	<script src="/js/angular/angular-cookies.min.js"></script>
+	<!-- customer js -->
+	<script src="/js/frontend/script.js"></script>
+	<script src="/js/frontend/min.js"></script>
+</body>
+</html>
