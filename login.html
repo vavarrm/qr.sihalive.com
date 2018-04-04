@@ -1,50 +1,88 @@
-
-<!doctype html>
-<html lang="zh-Hans" ng-app="pokerInsuranceApp">
+<!DOCTYPE html>
+<html lang="en">
 <head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<!-- Meta, title, CSS, favicons, etc. -->
 	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-	<meta name="description" content="">
-	<meta name="author" content="">
-	<title>保险计算机/Insurance computer</title>
-	<!-- jquery-ui.css -->
-	<link rel="stylesheet" href="/css/jquery-ui/1.12.1/jquery-ui.min.css">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<title>Gentelella Alela! | </title>
 	<!-- Bootstrap core CSS -->
 	<link href="/css/bootstrap/bootstrap.min.css" rel="stylesheet">
 	<!-- customer CSS -->
-	<link href="/css/frondend/login.css" rel="stylesheet">
 	<link rel="icon" href="images/favicon.ico" type="image/x-icon" />
+	<!-- Bootstrap -->
+	<link href="vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+	<!-- Font Awesome -->
+	<link href="vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+	<link rel="stylesheet" href="/css/colors-metro.css">
+	<link rel="stylesheet" href="/css/shop-style.css">
+	<style>
+		input{
+			border-radius: 0px!important;padding: 10px;
+		}
+
+	</style>
 </head>
-<body ng-controller="LoginCtrl">
-	<div class="container">
-		<div class="card card-container">
-			<img id="profile-img" class="profile-img-card" src="//ssl.gstatic.com/accounts/ui/avatar_2x.png" />
-			<p id="profile-name" class="profile-name-card"></p>
-			<form class="form-signin">
-				<span id="reauth-email" class="reauth-email"></span>
-				<input type="text" maxlength="12" ng-model="input.account"  class="form-control" placeholder="帐号/Account" required autofocus>
-				<input type="password" maxlength="12" ng-model="input.password" class="form-control" placeholder="密码/Password" required>
-				<button ng-click="login()" class="btn btn-lg btn-primary btn-block btn-signin" type="submit">登入/Sing in</button>
-			</form><!-- /form -->
-		</div><!-- /card-container -->
-	</div><!-- /container -->
-	<div  ng-include="'/views/dialog.html'"></div>
-	<div class="footer-copyright py-3 text-center">
-        © 2018 Copyright:
-        <a href="http://www.sihalive.com/">sihalive</a>
-    </div>
-	<!-- jquery -->
-	<script src="/js/jquery/1.12.4/jquery.min.js" ></script>	
-	<!-- bootstrp-->
-	<script src="/js/bootstrap/bootstrap.min.js"></script>
-	<!-- jQuery UI -->
-    <script src="/js/jquery-ui/1.12.1/jquery-ui.min.js"></script>
-	<!-- angular -->
-	<script src="/js/angular/angular.min.js"></script>
-	<script src="/js/angular/angular-route.min.js"></script>
-	<script src="/js/angular/angular-cookies.min.js"></script>
-	<!-- customer js -->
-	<script src="/js/frontend/script.js"></script>
-	<script src="/js/frontend/min.js"></script>
+
+<body>
+<div class="this-container this-metro-dark-red this-padding this-card ">
+	<center> <h3 > YADULY  CASINO </h3></center>
+	<div class="this-right">
+		<a href="#">English</a> / <a href="#">Chines</a>
+	</div>
+</div>
+<div class="container" style="padding: 0px!important;" >
+
+	<div class="this-container">
+<div class="col-sm-3"></div>
+		<div class="col-sm-6">
+			<form>
+				<br/>
+				<center>
+					<h3 style="text-transform: uppercase; font-weight: bold">Login Account</h3></center>
+				<div class="col-sm-12">
+					<br/>
+					<input type="text" name="name" class="form-control" placeholder="User name" required="" />
+					<br/>
+				</div>
+				<div class="col-sm-12 ">
+					<input type="text" name="password" class="form-control" placeholder="Password" required=""
+						   pattern=".{8,12}"
+						   required title="8 to 12 characters" />
+					<br/>
+				</div>
+
+				<br/>
+				<div class="col-sm-12  ">
+					<button type="submit" class="btn btn-default submit this-metro-dark-red">Login <i class="fa
+                        fa-send-o"></i></button>
+					<button type="reset" class="btn btn-default submit this-metro-dark-red">Cancel <i class="fa fa-refresh"></i>
+					</button>
+					<br/>
+				</div>
+				<div class="col-sm-12">
+					<br/>
+					<div class="separator">
+						<p class="change_link">Already a member ?
+							<a href="register.html" class="to_register"> Create Account </a>
+						</p>
+
+						<div class="clearfix"></div>
+						<br />
+
+
+					</div>
+				</div>
+
+
+				<div class="clearfix"></div>
+
+			</form>
+		</div>
+
+	</div>
+</div>
 </body>
 </html>
