@@ -90,8 +90,8 @@ class Api extends CI_Controller {
 			}
 			
 			if(
-				strlen($this->request['phone']) != 9 ||
-				strlen($this->request['phone']) != 8 
+				strlen($this->request['phone']) > 9 || 
+				strlen($this->request['phone']) < 8 
 			)
 			{
 				$array = array(
