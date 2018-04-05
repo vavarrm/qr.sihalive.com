@@ -6,17 +6,21 @@
 	<meta name="description" content="">
 	<meta name="author" content="">
 	<title>QR 搭車</title>
+	
+	<link rel="icon" href="images/favicon.ico" type="image/x-icon" />
 	<!-- jquery-ui.css -->
 	<link rel="stylesheet" href="/css/jquery-ui/1.12.1/jquery-ui.min.css">
-	<!-- Bootstrap core CSS -->
-	<link href="/css/bootstrap/bootstrap.min.css" rel="stylesheet">
+	 <!-- Bootstrap -->
+    <link href="/vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+	<!-- font-awesome CSS -->
+	<link href="vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
 	<!-- customer CSS -->
-	<link href="/css/frondend/index.css" rel="stylesheet">
-	<link rel="icon" href="images/favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="/css/colors-metro.css">
+    <link rel="stylesheet" href="/css/shop-style.css">
 </head>
 <body ng-controller="bodyCtrl" ng-init="init()">
-	<div ng-view></div>
-	<div  ng-include="'/views/dialog.html'"></div>
+	<div ng-view ng-init="init();"></div>
+	<div  ng-include="'/views/module/dialog.html'"></div>
 	<!-- jquery -->
 	<script src="/js/jquery/1.12.4/jquery.min.js" ></script>	
 	<!-- bootstrp-->

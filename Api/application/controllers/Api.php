@@ -15,7 +15,8 @@ class Api extends CI_Controller {
 		$this->response_code = $this->language->load('response');
 		$gitignore =array(
 			'login',
-			'logout'
+			'logout',
+			'register'
 		);
 			
 		try 
@@ -24,7 +25,7 @@ class Api extends CI_Controller {
 			if($checkUser !="200")
 			{
 				$array = array(
-					'status'	=>$checkAdmin
+					'status'	=>$checkUser
 				);
 				$MyException = new MyException();
 				$MyException->setParams($array);
@@ -34,7 +35,7 @@ class Api extends CI_Controller {
 		{
 			$parames = $e->getParams();
 			$parames['class'] = __CLASS__;
-			$parames['function'] = __function__;
+			$parames['function'] = __function__;;
 			$parames['message'] =  $this->response_code[$parames['status']]; 
 			$output['message'] = $parames['message']; 
 			$output['status'] = $parames['status']; 
@@ -44,6 +45,89 @@ class Api extends CI_Controller {
 		}
 		
     }
+	
+	public function register()
+	{
+		$output['body']=array();
+		$output['status'] = '200';
+		$output['title'] ='註冊';
+		try 
+		{
+			if(empty($this->request))
+			{
+				$array = array(
+					'status'	=>'001'
+				);
+				$MyException = new MyException();
+				$MyException->setParams($array);
+				throw $MyException;
+			}
+		
+			if(
+				empty($this->request['fname']) ||
+				empty($this->request['lname']) ||
+				empty($this->request['phone']) ||
+				empty($this->request['password']) ||
+				empty($this->request['c_password']) 
+			)
+			{
+				$array = array(
+					'status'	=>'001'
+				);
+				$MyException = new MyException();
+				$MyException->setParams($array);
+				throw $MyException;
+			}
+			
+			
+			if(!preg_match('/^[A-Za-z0-9]{8,12}$/', $this->request['password'])){
+				$array = array(
+					'status'	=>'010'
+				);
+				$MyException = new MyException();
+				$MyException->setParams($array);
+				throw $MyException;
+			}
+			
+			if(
+				strlen($this->request['phone']) != 9 ||
+				strlen($this->request['phone']) != 8 
+			)
+			{
+				$array = array(
+					'status'	=>'013'
+				);
+				$MyException = new MyException();
+				$MyException->setParams($array);
+				throw $MyException;
+			}
+		
+			
+			$row = $this->user->register($this->request);
+
+			if($row['affected_rows'] <0)
+			{
+				$array = array(
+					'status'	=>'003'
+				);
+				$MyException = new MyException();
+				$MyException->setParams($array);
+				throw $MyException;;
+			}
+		
+			$this->session->set_userdata('user_sess', $row);
+			$output['message'] =$this->response_code['201'];
+		}catch(MyException $e)
+		{
+			$parames = $e->getParams();
+			$parames['class'] = __CLASS__;
+			$parames['function'] = __function__;
+			$output['status']	=$parames['status'];
+			$output['message'] = $this->response_code[$parames['status']]; 
+		}
+		
+		$this->myfunc->response($output);
+	}
 	
 	public function getUser($urlRsaRandomKey='')
 	{
