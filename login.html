@@ -18,12 +18,6 @@
 	<link href="vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
 	<link rel="stylesheet" href="/css/colors-metro.css">
 	<link rel="stylesheet" href="/css/shop-style.css">
-	<style>
-		input{
-			border-radius: 0px!important;padding: 10px;
-		}
-
-	</style>
 </head>
 
 <body>
@@ -42,26 +36,24 @@
 				<br/>
 				<center>
 					<h3 style="text-transform: uppercase; font-weight: bold">Login Account</h3></center>
-				<div class="col-sm-12">
-					<br/>
-					<input type="text" name="name" class="form-control" placeholder="User name" required="" />
-					<br/>
+				<div class="form-group">
+					<label for="">User name </label>
+					<input type="email" class="form-control" placeholder="User">
 				</div>
-				<div class="col-sm-12 ">
-					<input type="text" name="password" class="form-control" placeholder="Password" required=""
-						   pattern=".{8,12}"
-						   required title="8 to 12 characters" />
-					<br/>
+				<div class="form-group">
+					<label for="">Password</label>
+					<input type="password" class="form-control"  placeholder="Password">
+				</div>
+				<br/>
+
+				<div class="form-group">
+					<button type="submit" class="btn btn-danger">Login <i class="fa
+                        fa-send-o"></i></button>
+					<button type="reset" class="btn btn-danger">Cancel <i class="fa fa-refresh"></i>
+					</button>
 				</div>
 
-				<br/>
-				<div class="col-sm-12  ">
-					<button type="submit" class="btn btn-default submit this-metro-dark-red">Login <i class="fa
-                        fa-send-o"></i></button>
-					<button type="reset" class="btn btn-default submit this-metro-dark-red">Cancel <i class="fa fa-refresh"></i>
-					</button>
-					<br/>
-				</div>
+
 				<div class="col-sm-12">
 					<br/>
 					<div class="separator">

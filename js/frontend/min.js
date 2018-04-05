@@ -9,7 +9,12 @@ pokerInsuranceApp.config(function($routeProvider)
 			return 'views/'+params.page+'.html';
 		},
 		controller: 'pageCtrl'
-    }).otherwise({redirectTo : '/Api/register/register'})
+    }).otherwise(
+		{
+			controller: 'Error404Controller',
+			templateUrl: 'views/Error404.html'
+		}
+	)
 });
 
 var LoginCtrl = function($scope ,$routeParams, apiService,$cookies)
@@ -84,6 +89,12 @@ var pageCtrl = function($scope ,$routeParams, apiService, $cookies)
 pokerInsuranceApp.controller('pageCtrl',  ['$scope' ,'$routeParams', 'apiService','$cookies', pageCtrl]);
 
 var bodyCtrl = function($scope ,$routeParams, apiService, $cookies)
+{
+	
+}
+pokerInsuranceApp.controller('Error404Controller',  ['$scope' ,'$routeParams', 'apiService','$cookies', Error404Controller]);
+
+var Error404Controller = function($scope ,$routeParams, apiService, $cookies)
 {
 	
 }
