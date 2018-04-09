@@ -5,8 +5,24 @@ class MyFunc
 	public function __construct() 
 	{
 		$this->CI =& get_instance();
-		$this->CI->load->library('session');
 		$this->CI->load->model('AdminUser_Model', 'admin_user');
+	}
+	
+	public function getIP()
+	{
+		if(!empty($_SERVER["HTTP_CLIENT_IP"])){
+			$cip = $_SERVER["HTTP_CLIENT_IP"];
+		}
+		elseif(!empty($_SERVER["HTTP_X_FORWARDED_FOR"])){
+			$cip = $_SERVER["HTTP_X_FORWARDED_FOR"];
+		}
+		elseif(!empty($_SERVER["REMOTE_ADDR"])){
+			$cip = $_SERVER["REMOTE_ADDR"];
+		}
+		else{
+			$cip = "無法取得IP位址！";
+		}
+		return $cip;
 	}
 	
 	public function validateDate($date, $format = 'Y-m-d')
@@ -15,6 +31,29 @@ class MyFunc
 		return $d && $d->format($format) == $date;
 	}
 
+	public function sendSms($ary)
+	{
+		$gsm=$ary['gsm'];
+		$url=$_SERVER['SMS_REQUEST_URL'];
+		$post = array(
+			'username'	=>$_SERVER['SMS_USERNAME'],
+			'pass'		=>md5($_SERVER['SMS_PASSWD']),
+			'cd'		=>'Cust001',
+			'sender'	=>"Sihalive",
+			'smstext'	=>$ary['smstex'],
+			'isflash'	=>0,
+			'gsm'		=>$gsm,
+		);
+		$ch = curl_init();
+		@curl_setopt($ch, CURLOPT_URL, $url);
+		@curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/x-www-form-urlencoded'));
+		@curl_setopt($ch, CURLOPT_POST, true);
+		@curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($post)); 
+		@curl_setopt($ch, CURLOPT_RETURNTRANSFER , 1);
+		$output = curl_exec($ch); 
+		curl_close($ch);
+		return $output;
+	}
 	
 	public function readJson($parameter = array())
 	{
@@ -193,7 +232,7 @@ class MyFunc
 		return $decrypt_data;
 	}
 	
-	public function checkUser($gitignore)
+	public function checkUser($gitignore,$user_data)
 	{
 		
 		$get = $this->CI->input->get();
@@ -203,20 +242,11 @@ class MyFunc
 		
 		$result = array_merge($gitignore, $default);
 		if(!in_array($this->CI->uri->segment(2), $result ))
-		{
-			if($get['sess'] =='')
-			{
-				return  '000' ;
-			}
-			
-			$user_data = $this->getUser($get['sess']);
-			
+		{	
 			if(empty($user_data))
 			{
 				return '000';
-			}
-			
-			
+			}	
 		}
 		return '200';
 	}

@@ -78,7 +78,6 @@
 				
 				$sql ="	INSERT INTO user (last_name, first_name,phone, password)
 						VALUES(?,?,?,?)";
-				
 				$bind =array(
 					$ary['fname'],
 					$ary['lname'],

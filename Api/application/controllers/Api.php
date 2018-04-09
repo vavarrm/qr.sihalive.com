@@ -7,21 +7,29 @@ class Api extends CI_Controller {
 	public function __construct() 
 	{
 		parent::__construct();	
+		
 		$this->load->model('User_Model', 'user');
-		$newdata= array('d');
+		$this->load->model('UserVerifycode_Model', 'userVC');
+		$this->load->library('session');
+		
 		$this->request = json_decode(trim(file_get_contents('php://input'), 'r'), true);
 		$this->get = $this->input->get();
 		$this->post = $this->input->post();
 		$this->response_code = $this->language->load('response');
+		 
+		$this->user_sess = $this->session->userdata('user_sess');
+		
 		$gitignore =array(
 			'login',
 			'logout',
 			'register'
 		);
-			
+
 		try 
 		{
-			$checkUser = $this->myfunc->checkUser($gitignore);
+			
+			$checkUser = $this->myfunc->checkUser($gitignore, $this->user_sess );
+			
 			if($checkUser !="200")
 			{
 				$array = array(
@@ -45,6 +53,90 @@ class Api extends CI_Controller {
 		}
 		
     }
+
+	public function resendVerifyCode()
+	{
+		$output['body']=array();
+		$output['status'] = '200';
+		$output['title'] ='';
+		try 
+		{
+			
+			$row = $this->user_sess;
+			$row['ip'] =  $this->myfunc->getIP();
+			$VerifyCode  = $this->userVC->getVerifyCode($row);
+			$row['VerifyCode'] = $VerifyCode['code'];
+			$code = $this->userVC->insert($row);
+			
+			$ary = array(
+				'smstext' 	=>sprintf('This is your VerifyCode',$row['VerifyCode']),
+				'gsm'		=>$this->user_sess['phone']
+			);
+			$sendSms = $this->myfunc->sendSms($ary);
+			$sendSms.="[Success]";
+			if(!strpos($sendSms,"[Success]"))
+			{
+				$array = array(
+					'status'	=>'005'
+				);
+				$MyException = new MyException();
+				$MyException->setParams($array);
+				throw $MyException;
+			}
+			
+			$output['body'] = $code ;
+			$output['message'] =  $this->response_code['203']; 
+		}catch(MyException $e)
+		{
+			$parames = $e->getParams();
+			$parames['class'] = __CLASS__;
+			$parames['function'] = __function__;
+			$parames['message'] =  $this->response_code[$parames['status']]; 
+			$output['status'] = $parames['status']; 
+			$output['message'] = $parames['message']; 
+			$this->myLog->error_log($parames);
+		}
+		
+		$this->myfunc->response($output);
+	}
+	
+	public function verifyCode()
+	{
+		$output['body']=array();
+		$output['status'] = '200';
+		$output['title'] ='';
+		try 
+		{
+			if(
+				$this->request['vid'] =='' ||
+				$this->request['verify_code'] =='' 
+			)
+			{
+				$array = array(
+					'status'	=>'001'
+				);
+				$MyException = new MyException();
+				$MyException->setParams($array);
+				throw $MyException;
+			}
+			
+			$this->request['id'] =$this->user_sess['id'];
+			$verifyCode = $this->userVC->checkVerifyCode($this->request);
+			$output['message'] =  $this->response_code['202']; 
+			
+		}catch(MyException $e)
+		{
+			$parames = $e->getParams();
+			$parames['class'] = __CLASS__;
+			$parames['function'] = __function__;
+			$parames['message'] =  $this->response_code[$parames['status']]; 
+			$output['status'] = $parames['status']; 
+			$output['message'] = $parames['message']; 
+			$this->myLog->error_log($parames);
+		}
+		
+		$this->myfunc->response($output);
+	}
 	
 	public function register()
 	{
@@ -90,8 +182,7 @@ class Api extends CI_Controller {
 			}
 			
 			if(
-				strlen($this->request['phone']) > 9 || 
-				strlen($this->request['phone']) < 8 
+				!preg_match("/^[0-9]{8,9}$/", $this->request['phone'])
 			)
 			{
 				$array = array(
@@ -102,7 +193,19 @@ class Api extends CI_Controller {
 				throw $MyException;
 			}
 		
-			
+			$phoneNumberOne = substr($this->request['phone'] ,0,1 );
+			if($phoneNumberOne==0)
+			{
+				$this->request['phone'] = substr($this->request['phone'] ,1,8 );
+			}
+			$this->request['phone'] = "855".$this->request['phone'];
+			$ip = $this->myfunc->getIP();
+		
+			$ary = array(
+				'phone' =>$this->request['phone'],
+				'ip'	=>$ip
+			);
+			$VerifyCode  = $this->userVC->getVerifyCode($ary);
 			$row = $this->user->register($this->request);
 
 			if($row['affected_rows'] <0)
@@ -112,23 +215,49 @@ class Api extends CI_Controller {
 				);
 				$MyException = new MyException();
 				$MyException->setParams($array);
-				throw $MyException;;
+				throw $MyException;
 			}
-		
-			$this->session->set_userdata('user_sess', $row);
+			$row['user']['ip'] = $ip;
+			$this->session->set_userdata('user_sess', $row['user']);
+			
+			$ary = array(
+				'smstext' 	=>sprintf('This is your VerifyCode',$VerifyCode),
+				'gsm'		=>$this->request['phone']
+			);
+			$sendSms = $this->myfunc->sendSms($ary);
+			$sendSms.="[Success]";
+			if(!strpos($sendSms,"[Success]"))
+			{
+				$array = array(
+					'status'	=>'005'
+				);
+				$MyException = new MyException();
+				$MyException->setParams($array);
+				throw $MyException;
+			}
+			$row['user']['VerifyCode'] = $VerifyCode['code'] ;
+			$code = $this->userVC->insert($row['user']);
+			
+			$output['body']['user'] = array(
+				'id'			=>$row['user']['id'],
+				'vid'			=>$code['id'],
+			);
 			$output['message'] =$this->response_code['201'];
 		}catch(MyException $e)
 		{
 			$parames = $e->getParams();
 			$parames['class'] = __CLASS__;
 			$parames['function'] = __function__;
-			$output['status']	=$parames['status'];
-			$output['message'] = $this->response_code[$parames['status']]; 
+			$parames['message'] =  $this->response_code[$parames['status']]; 
+			$output['status'] = $parames['status']; 
+			$output['message'] = $parames['message']; 
+			$this->myLog->error_log($parames);
 		}
 		
 		$this->myfunc->response($output);
 	}
 	
+	/*
 	public function getUser($urlRsaRandomKey='')
 	{
 		$output['body']=array();
@@ -256,6 +385,6 @@ class Api extends CI_Controller {
 		$this->myfunc->response($output);
 	}
 
-	
+	*/
 	
 }
