@@ -18,10 +18,8 @@ class AdminApi extends CI_Controller {
 			'login',
 			'logout'
 		);
-			
 		try 
 		{
-			
 			$checkAdmin = $this->myfunc->checkAdmin($gitignore);
 			if($checkAdmin !="200")
 			{
@@ -45,7 +43,6 @@ class AdminApi extends CI_Controller {
 			exit;
 		}
     }
-	
 	public function logout()
 	{
 		$this->session->unset_userdata('encrypt_admin_user_data');
