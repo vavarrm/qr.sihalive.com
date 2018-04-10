@@ -13,9 +13,43 @@
 				<br>
 				<form   action="{{data.form.action}}" method="post" class="form-horizontal form-label-left" enctype="multipart/form-data">
 					<div class="form-group" >
-						<label class="control-label col-md-3 col-sm-3 col-xs-6" >name<span ng-bind="row.odds_outs"></span>：</label>
+						<label class="control-label col-md-3 col-sm-3 col-xs-6" >data</label>
+						<div class="col-md-6">
+							<input type="text" name="data"  required="required" class="form-control col-md-7 col-xs-12">
+						</div>
+					</div>
+					<div class="form-group" >
+						<label class="control-label col-md-3 col-sm-3 col-xs-6" >title</label>
+						<div class="col-md-6">
+							<input type="text" name="title"  required="required" class="form-control col-md-7 col-xs-12">
+						</div>
+					</div>
+					<div class="form-group" >
+						<label class="control-label col-md-3 col-sm-3 col-xs-6" >level</label>
 						<div class="col-md-2">
-							<input type="number" name="name"  required="required" class="form-control col-md-7 col-xs-12">
+							<select name="level" class="form-control col-md-7 col-xs-12">
+								<option value="L">L - smallest</option>
+								<option value="M">M</option>
+								<option value="Q">Q</option>
+								<option value="H">H</option>
+							</select>
+						</div>
+					</div>
+					<div class="form-group" >
+						<label class="control-label col-md-3 col-sm-3 col-xs-6" >size</label>
+						<div class="col-md-2">
+							<select name="size" class="form-control col-md-7 col-xs-12">
+								<option value="1">1</option>
+								<option value="2">2</option>
+								<option value="3">3</option>
+								<option value="4">4</option>
+								<option value="5">5</option>
+								<option value="6">6</option>
+								<option value="7">7</option>
+								<option value="8">8</option>
+								<option value="9">9</option>
+								<option value="10">10</option>
+							</select>
 						</div>
 					</div>
 					<div class="ln_solid"></div>

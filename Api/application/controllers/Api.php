@@ -10,6 +10,8 @@ class Api extends CI_Controller {
 		
 		$this->load->model('User_Model', 'user');
 		$this->load->model('UserVerifycode_Model', 'userVC');
+		$this->load->model('UserDelivery_Model', 'delivery');
+		$this->load->model('Qrcode_Model', 'qrcode');
 		$this->load->library('session');
 		
 		$this->request = json_decode(trim(file_get_contents('php://input'), 'r'), true);
@@ -22,7 +24,8 @@ class Api extends CI_Controller {
 		$gitignore =array(
 			'login',
 			'logout',
-			'register'
+			'register',
+			'registerForm'
 		);
 
 		try 
@@ -39,6 +42,8 @@ class Api extends CI_Controller {
 				$MyException->setParams($array);
 				throw $MyException;
 			}
+			
+
 		}catch(MyException $e)
 		{
 			$parames = $e->getParams();
@@ -54,6 +59,56 @@ class Api extends CI_Controller {
 		
     }
 
+	
+	public function calltuktuk()
+	{
+		$output['body']=array();
+		$output['status'] = '200';
+		$output['title'] ='';
+		try 
+		{
+			
+			if(
+				$this->request['id'] ==''
+			)
+			{
+				$array = array(
+					'status'	=>'001'
+				);
+				$MyException = new MyException();
+				$MyException->setParams($array);
+				throw $MyException;
+			}
+			
+			$ary = array(
+				'qrcode_id' =>$this->request['id'] ,
+				'user_id' =>$this->user_sess['id'],
+				'max'		=>1
+			);
+			$row = $this->delivery->insert($ary);
+			if($row['affected_rows'] == 0)
+			{
+				$array = array(
+					'status'	=>'012'
+				);
+				$MyException = new MyException();
+				$MyException->setParams($array);
+				throw $MyException;
+			}
+		}catch(MyException $e)
+		{
+			$parames = $e->getParams();
+			$parames['class'] = __CLASS__;
+			$parames['function'] = __function__;
+			$parames['message'] =  $this->response_code[$parames['status']]; 
+			$output['status'] = $parames['status']; 
+			$output['message'] = $parames['message']; 
+			$this->myLog->error_log($parames);
+		}
+		
+		$this->myfunc->response($output);
+	}
+	
 	public function resendVerifyCode()
 	{
 		$output['body']=array();
@@ -86,6 +141,7 @@ class Api extends CI_Controller {
 			
 			$output['body'] = $code ;
 			$output['message'] =  $this->response_code['203']; 
+
 		}catch(MyException $e)
 		{
 			$parames = $e->getParams();
@@ -123,6 +179,53 @@ class Api extends CI_Controller {
 			$this->request['id'] =$this->user_sess['id'];
 			$verifyCode = $this->userVC->checkVerifyCode($this->request);
 			$output['message'] =  $this->response_code['202']; 
+			
+		}catch(MyException $e)
+		{
+			$parames = $e->getParams();
+			$parames['class'] = __CLASS__;
+			$parames['function'] = __function__;
+			$parames['message'] =  $this->response_code[$parames['status']]; 
+			$output['status'] = $parames['status']; 
+			$output['message'] = $parames['message']; 
+			$this->myLog->error_log($parames);
+		}
+		
+		$this->myfunc->response($output);
+	}
+	
+	public function registerForm()
+	{
+		$output['body']=array();
+		$output['status'] = '200';
+		$output['title'] ='';
+		try 
+		{
+		
+			if(
+				$this->request['id'] ==''
+			)
+			{
+				$array = array(
+					'status'	=>'011'
+				);
+				$MyException = new MyException();
+				$MyException->setParams($array);
+				throw $MyException;
+			}
+			
+			$row = $this->qrcode->getRow($this->request['id']);
+			if(empty($row))
+			{
+				$array = array(
+					'status'	=>'011'
+				);
+				$MyException = new MyException();
+				$MyException->setParams($array);
+				throw $MyException;
+			}
+			$output['body'] = $row;
+			
 			
 		}catch(MyException $e)
 		{

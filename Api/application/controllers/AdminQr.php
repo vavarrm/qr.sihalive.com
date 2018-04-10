@@ -45,6 +45,70 @@ class AdminQr extends CI_Controller {
 		}
     }
 	
+	public function doEdit()
+	{
+		$output['body']=array();
+		$output['status'] = '200';
+		$output['status'] = '200';
+		$output['title'] ='qr generator';
+		$output['message'] ='generator ok';
+		$back =-2;
+		try 
+		{
+			if(
+				empty($this->post['data']) ||
+				empty($this->post['title']) ||
+				empty($this->post['level']) || 
+				empty($this->post['size']) || 
+				!in_array($this->post['level'], array('L','M','Q','H'))
+			)
+			{
+				$array = array(
+					'status'	=>'002'
+				);
+				$MyException = new MyException();
+				$MyException->setParams($array);
+				throw $MyException;
+			}
+			
+			$this->post['size'] = min(max((int)$this->post['size'], 1), 10);
+			$path = IMAGEPATH.'qrcode'.DIRECTORY_SEPARATOR;
+			$filename = md5($this->post['data'].'|'.$this->post['level'].'|'.$matrixPointSize).'.png';
+			QRcode::png($this->post['data'], $path.$filename, $this->post['level'], $this->post['size'], 2); 
+			
+			if(!is_file($path.$filename))
+			{
+				$array = array(
+					'status'	=>'004'
+				);
+				$MyException = new MyException();
+				$MyException->setParams($array);
+				throw $MyException;
+			}
+			
+			$ary = array(
+				'data'	=>$this->post['data'],
+				'filename'	=>$filename,
+				'title'	=>$this->post['title']
+			);
+			$data  =  $this->qrcode->insert($ary );
+			
+			
+			
+		}catch(MyException $e)
+		{
+			$parames = $e->getParams();
+			$parames['class'] = __CLASS__;
+			$parames['function'] = __function__;
+			$parames['message'] =  $this->response_code[$parames['status']]; 
+			$output['message'] = $parames['message']; 
+			$output['status'] = $parames['status']; 
+			$this->myLog->error_log($parames);
+		}
+		$this->myfunc->back($back,$output['message']);
+	
+	}
+	
 	public function addForm()
 	{
 		$output['body']=array();
@@ -55,7 +119,7 @@ class AdminQr extends CI_Controller {
 		{
 			$output['body']['row']['info'] = $data['row'];
 			$output['body']['row']['form'] = array(
-				'action'	=> '/'.__CLASS__.'/doEdit',
+				'action'	=> '/Api/'.__CLASS__.'/doEdit',
 				'pe_id'		=>$this->get['pe_id']
 			);
 		}catch(MyException $e)
@@ -69,6 +133,38 @@ class AdminQr extends CI_Controller {
 			$this->myLog->error_log($parames);
 		}
 		
+		$this->myfunc->response($output);
+	}
+	
+	public function delQr()
+	{
+		$output['body']=array();
+		$output['status'] = '200';
+		$output['title'] ='Qr  Del';
+		try 
+		{
+	
+			$id= (isset($this->request['id']))?$this->request['id']:'';
+			if($id=="")
+			{
+				$array = array(
+					'status'	=>'002'
+				);
+				$MyException = new MyException();
+				$MyException->setParams($array);
+				throw $MyException;
+			}
+			$data = $this->qrcode->del($id);
+		}catch(MyException $e)
+		{
+			$parames = $e->getParams();
+			$parames['class'] = __CLASS__;
+			$parames['function'] = __function__;
+			$parames['message'] =  $this->response_code[$parames['status']]; 
+			$output['message'] = $parames['message']; 
+			$output['status'] = $parames['status']; 
+			$this->myLog->error_log($parames);
+		}
 		$this->myfunc->response($output);
 	}
 	
@@ -105,9 +201,11 @@ class AdminQr extends CI_Controller {
 			
 			$ary['order'] = (empty($this->request['order']))?array("t.id"=>'DESC'):$this->request['order'];
 		    
-			$form['datetimeSearchControl'] = true;
+			// $form['datetimeSearchControl'] = true;
 
 			$form['table_add'] = __CLASS__."/add/".__CLASS__.'Add/';
+			$form['table_del'] = "delQr";
+			// $form['table_edit'] =  __CLASS__."/editQr/".__CLASS__.'editQr/';
 			$temp=array(
 				'pe_id' =>$this->pe_id,
 				'ad_id' =>$this->admin['ad_id'],
@@ -136,7 +234,10 @@ class AdminQr extends CI_Controller {
 			);
 			
 			$ary['fields'] = array(
-				'id'		=>array('field'=>'t.id AS q_id','AS' =>'id'),
+				'id'				=>array('field'=>'t.id AS q_id','AS' =>'id'),
+				'data'				=>array('field'=>'t.data AS data','AS' =>'data'),
+				'title'		        =>array('field'=>'t.title	 AS title	','AS' =>'title'),
+				'image_name'		=>array('field'=>'CONCAT("/images/qrcode/",t.image_name)	 AS image_name	','AS' =>'QR' ,'type' =>"img","target"=>"_blank")
 			);
 			
 			$ary['subtotal'] = array(

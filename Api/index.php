@@ -236,9 +236,8 @@ switch (ENVIRONMENT)
 	define('FCPATH', dirname(__FILE__).DIRECTORY_SEPARATOR);
 	
 	// Path to the image
-	define('IMAGEPATH', dirname(__FILE__).DIRECTORY_SEPARATOR.'images');
+	define('IMAGEPATH', dirname(__FILE__).DIRECTORY_SEPARATOR."..".DIRECTORY_SEPARATOR.'images'.DIRECTORY_SEPARATOR);
 	
-
 
 	// Name of the "system" directory
 	define('SYSDIR', basename(BASEPATH));

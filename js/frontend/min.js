@@ -34,7 +34,8 @@ var pageCtrl = function($scope ,$routeParams, apiService, $cookies)
 	$scope.data =
 	{
 		input :{},
-		urlParams:{}
+		urlParams:{},
+		response :{}
 	}
 	
 	var strUrl = location.href;
@@ -49,6 +50,76 @@ var pageCtrl = function($scope ,$routeParams, apiService, $cookies)
 			ParaVal = getPara[i].split("=");
 			$scope.data.urlParams[ParaVal[0]] = ParaVal[1];
 		}
+	}
+	
+	$scope.calltuktuk = function()
+	{
+		if($scope.ajaxload == true)
+		{
+			var obj =
+			{
+				'message' :'loading.....',
+			};
+			dialog(obj);
+			return false;
+		}
+		$scope.ajaxload = true;
+		var promise = apiService.Api('/Api/'+$routeParams.controller+'/calltuktuk', $scope.data.urlParams);
+		promise.then
+		(
+			function(r) 
+			{
+				$scope.ajaxload = false;
+				if(r.data.status =="200")
+				{
+					$scope.data.response = r.data.body;
+				}else
+				{
+					var obj ={
+					'message' :r.data.message
+					};
+					dialog(obj);
+				}
+				
+			},
+			function() {
+				$scope.ajaxload = false;
+				var obj ={
+					'message' :'system error'
+				};
+				dialog(obj);
+			}
+		)
+	}
+	
+	$scope.init = function()
+	{
+		var promise = apiService.Api('/Api/'+$routeParams.controller+'/registerForm', $scope.data.urlParams);
+		promise.then
+		(
+			function(r) 
+			{
+				
+				if(r.data.status =="200")
+				{
+					$scope.data.response = r.data.body;
+				}else
+				{
+					var obj ={
+					'message' :r.data.message
+					};
+					dialog(obj);
+				}
+				
+			},
+			function() {
+				
+				var obj ={
+					'message' :'system error'
+				};
+				dialog(obj);
+			}
+		)
 	}
 	
 	$scope.starttimer = function()

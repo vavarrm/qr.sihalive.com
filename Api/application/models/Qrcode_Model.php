@@ -21,44 +21,124 @@
 			}
 		}
 
+		public function getRow($id)
+		{
+			try
+			{
+				$bind = array(
+					$id
+				);
+				
+				$sql = "SELECT * FROM qrcode WHERE id =?";
+				$query = $this->db->query($sql, $bind);
+				$error = $this->db->error();
+				if($error['message'] !="")
+				{
+					$MyException = new MyException();
+					$array = array(
+						'el_system_error' 	=>$error['message'] ,
+						'status'	=>'000'
+					);
+					
+					$MyException->setParams($array);
+					throw $MyException;
+				}
+				
+				$row = $query->row_array();
+				$query->free_result();
+	
+	
+				return $row ;
+			}	
+			catch(MyException $e)
+			{
+				$this->db->trans_rollback();
+				throw $e;
+			}
+		}
+		
+		public function del($id)
+		{
+			$output = array();
+			try
+			{
+				$bind = array(
+					$id
+				);
+				
+				$sql = "SELECT * FROM qrcode WHERE id =?";
+				$query = $this->db->query($sql, $bind);
+				$error = $this->db->error();
+				if($error['message'] !="")
+				{
+					$MyException = new MyException();
+					$array = array(
+						'el_system_error' 	=>$error['message'] ,
+						'status'	=>'000'
+					);
+					
+					$MyException->setParams($array);
+					throw $MyException;
+				}
+				
+				$row = $query->row_array();
+				$query->free_result();
+				if(empty($row))
+				{
+					$MyException = new MyException();
+					$array = array(
+						'el_system_error' 	=>'cant get Qrcode row',
+						'status'	=>'000'
+					);
+					
+					$MyException->setParams($array);
+					throw $MyException;
+				}
+				
+				
+				$sql ="	DELETE FROM qrcode WHERE id=?";
+				$this->db->query($sql, $bind);
+				$error = $this->db->error();
+				if($error['message'] !="")
+				{
+					$MyException = new MyException();
+					$array = array(
+						'el_system_error' 	=>$error['message'] ,
+						'status'	=>'000'
+					);
+					
+					$MyException->setParams($array);
+					throw $MyException;
+				}
+				
+				$path = IMAGEPATH.'qrcode'.DIRECTORY_SEPARATOR;
+				if(is_file($path.$row['image_path'].$row['image_name']))
+				{
+					  unlink($path.$row['image_path'].$row['image_name']);
+				}
+				return $output ;
+			}	
+			catch(MyException $e)
+			{
+				$this->db->trans_rollback();
+				throw $e;
+			}
+		}
 		
 		public function insert($ary)
 		{
 			$output = array();
 			try
 			{
-				$order_number = $this->getOrderNumber($ary['order_number']);
-				$this->db->trans_begin();
-				$sql ="	INSERT texasholdem_insurance_order(
-							round,
-							outs,
-							odds,
-							pot,
-							maximun,
-							maximun_p50,
-							buy_amount,
-							u_id,
-							insured_amount,
-							order_number,
-							players,
-							result,
-							pay_amount,
-							complete
-						)VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,1)";
+				$sql ="	REPLACE INTO qrcode(
+							image_name,
+							data,
+							title
+						)VALUES(?,?,?)";
 				$bind =array(
-					$ary['round'],
-					$ary['outs'],
-					$ary['odds'],
-					$ary['pot'],
-					$ary['maximun'],
-					$ary['maximun_p50'],
-					$ary['amount'],
-					$ary['u_id'],
-					$ary['pay'],
-					$order_number ,
-					$ary['players'],
-					$ary['result'],
-					$ary['payamount'],
+					$ary['filename'],
+					$ary['data'],
+					$ary['title'],
 				);
 				
 				$this->db->query($sql, $bind);
@@ -76,22 +156,8 @@
 				}
 				
 				$affected_rows = $this->db->affected_rows();
-				if($affected_rows==0)
-				{
-					$MyException = new MyException();
-					$array = array(
-						'el_system_error' 	=>$error['message'] ,
-						'status'	=>'000'
-					);
-					
-					$MyException->setParams($array);
-					throw $MyException;
-				}
-				$order_id =  $this->db->insert_id();
+				$output['affected_rows'] = $affected_rows;
 				
-				$this->db->trans_commit();
-				$output['order_id'] =$order_id;
-				$output['order_number'] =$order_number;
 				return $output ;
 			}	
 			catch(MyException $e)
