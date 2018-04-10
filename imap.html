@@ -21,10 +21,14 @@
             padding: 0px;
         }
         #map {
+            height: 100%;
             width: 100%;
-            height: 50%;
-            min-height:420px;
+            min-height: 450px;
         }
+       .form-control{
+           width: 100%!important;
+           border-radius: 0px;
+       }
         .container-p0{
             padding: 0px!important;
         }
@@ -36,12 +40,18 @@
 
         .container-p0{
             padding: 0px!important;
+            overflow: hidden;
+            position:relative;
+            margin-top: -5px;
         }
         li a{
             color: #fff!important;
         }
         .navbar-brand{
             color: white!important;
+        }
+        .map_size{
+            width: 100%; height: 100%;
         }
 
     </style>
@@ -80,45 +90,38 @@
     </div>
 </div>
 
-<div class="container this-margin-top container-p0"  style="overflow: hidden; position:relative" >
-    <div id="map"></div>
-    <div class="container" >
+<div class="container this-margin-top container-p0"   >
+
+    <div class="container container-p0 this-white" >
         <from>
-            <div class="form-group" >
-
+            <div class="form-group" style="; z-index: 1000;position: absolute;width: 50%" >
                 <select class="form-control " id="start">
-                    <option value="333 Apartments">333 Apartments</option>
-                    <option value="7 Jan Boutique">7 Jan Boutique</option>
-                    <option value="Aristocrat Residence and Hote">Aristocrat Residence and Hote</option>
-                    <option value="Bao Mai Resort & Casino">Bao Mai Resort & Casino</option>
+                    <option value="10.616248,103.523762">333 Apartments</option>
+                    <option value="10.604387,103.534692">7 Jan Boutique</option>
+
                 </select>
             </div>
-
-            <div class="form-group this-hide" >
-                <label >Waypoints: </label>
-                <select  id="waypoints" class="form-control">
-                    <option value="333 Apartments">333 Apartments</option>
-                    <option value="7 Jan Boutique">7 Jan Boutique</option>
-                    <option value="Aristocrat Residence and Hote">Aristocrat Residence and Hote</option>
-                    <option value="Bao Mai Resort & Casino">Bao Mai Resort & Casino</option>
+            <div class="form-group "style="; z-index: 1000;position: absolute; right: 0px; margin-left: 45%; width: 50%" >
+                <select class="form-control " id="end" >
+                    <option value="10.607372,103.521362">Aristocrat Residence and Hotel</option>
+                    <option value="10.634437,103.504662">Backpacker Heaven</option>
                 </select>
             </div>
-            <div class="form-group" >
-
-                <select class="form-control " id="end" readonly="">
-                    <option value="Yadoly Casino">Yadoly Casino</option>
-                </select>
+            <div class="this-container" id="map"></div>
+            <div class="this-container this-padding this-metro-dark-red  " id="kms" style="font-size: 13px" >Where
+            you go ?</div>
+            <div class="form-group ">
+                <label> Message : </label>
+                <input class="form-control" placeholder="Your message..." >
             </div>
             <div class="form-group">
-                <button class="btn btn-danger" type="submit" id="submit" ><i class="fa fa-male"></i> Load </button>
+                <button class=" btn btn-danger"> Send </button>
             </div>
-
-
         </from>
-        <div id="directions-panel"></div>
+
+
     </div>
 </div>
-
 <!-- Replace the value of the key parameter with your own API key. -->
 <script async defer
         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBSYg7lk_d7AzrXc3L-nz6iOdIcnuCx4EU&callback=initMap">
@@ -130,49 +133,35 @@
         var map = new google.maps.Map(document.getElementById('map'), {
             zoom: 15,
             center: {lat: 10.607683, lng: 103.525305},
-
+            gestureHandling: "greedy"
         });
         directionsDisplay.setMap(map);
 
-        document.getElementById('submit').addEventListener('click', function() {
+        var onChangeHandler = function() {
             calculateAndDisplayRoute(directionsService, directionsDisplay);
-        });
+        };
+        document.getElementById('start').addEventListener('change', onChangeHandler);
+        document.getElementById('end').addEventListener('change', onChangeHandler);
     }
-
     function calculateAndDisplayRoute(directionsService, directionsDisplay) {
-        var waypts = [];
-        var checkboxArray = document.getElementById('start');
-        for (var i = 0; i < checkboxArray.length; i++) {
-            if (checkboxArray.options[i].selected) {
-                waypts.push({
-                    location: checkboxArray[i].value,
-                    stopover: true
-                });
-            }
-        }
-
+        var km='';
+        var from="";
+        var to="";
         directionsService.route({
             origin: document.getElementById('start').value,
             destination: document.getElementById('end').value,
-            waypoints: waypts,
-            optimizeWaypoints: true,
             travelMode: 'DRIVING'
-
         }, function(response, status) {
             if (status === 'OK') {
                 directionsDisplay.setDirections(response);
-                var route = response.routes[0];
-                var summaryPanel = document.getElementById('directions-panel');
-                summaryPanel.innerHTML = '';
-                // For each route, display summary information.
-                for (var i = 0; i < route.legs.length; i++) {
-                    var routeSegment = i ;
-                    summaryPanel.innerHTML += " Rout : <br/> " + routeSegment +
-                        '';
-                    summaryPanel.innerHTML += route.legs[i].start_address + 'to ';
-                    summaryPanel.innerHTML += route.legs[i].end_address + '<br>';
-                    summaryPanel.innerHTML += route.legs[i].distance.text+'<br/>';
-                }
+                km= response.routes[0].legs[0].distance.value;
+                from=document.getElementById('start');
+                to=document.getElementById('end');
+                var frm= from.options[from.selectedIndex].text;
+                var end= to.options[to.selectedIndex].text;
+                console.log(frm +'to'+ end);
+                document.getElementById('kms').innerHTML='From : '+frm + ' to '+ end + '<br/>= ' +km/1000 +' Km';
+
             } else {
                 window.alert('Directions request failed due to ' + status);
             }

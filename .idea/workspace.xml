@@ -2,25 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="8a265009-1019-4ab5-b478-529f07c9fc8a" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/Api/application/controllers/Contact.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Api/application/controllers/Feedback.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Api/application/models/Contact_Model.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Api/application/models/Feedback_Model.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/feedback.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/request.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tuktuk.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Api/application/config/autoload.php" beforeDir="false" afterPath="$PROJECT_DIR$/Api/application/config/autoload.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Api/application/config/database.php" beforeDir="false" afterPath="$PROJECT_DIR$/Api/application/config/database.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Api/application/controllers/AdminApi.php" beforeDir="false" afterPath="$PROJECT_DIR$/Api/application/controllers/AdminApi.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Api/application/third_party/phpmailer/class.phpmailer.php" beforeDir="false" afterPath="$PROJECT_DIR$/Api/application/third_party/phpmailer/class.phpmailer.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Api/application/third_party/phpmailer/class.pop3.php" beforeDir="false" afterPath="$PROJECT_DIR$/Api/application/third_party/phpmailer/class.pop3.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Api/application/third_party/phpmailer/class.smtp.php" beforeDir="false" afterPath="$PROJECT_DIR$/Api/application/third_party/phpmailer/class.smtp.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/contact.html" beforeDir="false" afterPath="$PROJECT_DIR$/contact.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/imap.html" beforeDir="false" afterPath="$PROJECT_DIR$/imap.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/login.html" beforeDir="false" afterPath="$PROJECT_DIR$/login.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/register.html" beforeDir="false" afterPath="$PROJECT_DIR$/register.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sql/rq.sihalive.sql" beforeDir="false" afterPath="$PROJECT_DIR$/sql/rq.sihalive.sql" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -62,14 +45,26 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="imap.html" pinned="false" current-in-tab="false">
+      <file leaf-file-name="imap.html" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/imap.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="3003">
-              <caret line="173" column="80" selection-start-line="173" selection-start-column="80" selection-end-line="173" selection-end-column="80" />
+            <state relative-caret-position="495">
+              <caret line="112" column="35" selection-start-line="112" selection-start-column="35" selection-end-line="112" selection-end-column="35" />
               <folding>
                 <element signature="n#div#0;n#body#0;n#html#0;n#!!top" />
+                <element signature="n#style#0;n#div#0;n#from#0;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#div#1;n#from#0;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#div#3;n#from#0;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="map.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/map.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="105">
+              <caret line="5" column="4" selection-start-line="5" selection-start-column="4" selection-end-line="5" selection-end-column="27" />
             </state>
           </provider>
         </entry>
@@ -78,7 +73,7 @@
         <entry file="file://$PROJECT_DIR$/Api/application/models/Contact_Model.php">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="504">
-              <caret line="24" column="6" lean-forward="true" selection-start-line="2" selection-start-column="4" selection-end-line="24" selection-end-column="6" />
+              <caret line="24" column="6" selection-start-line="2" selection-start-column="4" selection-end-line="24" selection-end-column="6" />
             </state>
           </provider>
         </entry>
@@ -87,16 +82,16 @@
         <entry file="file://$PROJECT_DIR$/Api/application/controllers/Contact.php">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="504">
-              <caret line="24" column="5" lean-forward="true" selection-start-line="10" selection-start-column="3" selection-end-line="24" selection-end-column="5" />
+              <caret line="24" column="5" selection-start-line="10" selection-start-column="3" selection-end-line="24" selection-end-column="5" />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="feedback.html" pinned="false" current-in-tab="true">
+      <file leaf-file-name="feedback.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/feedback.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="756">
-              <caret line="36" column="6" lean-forward="true" selection-start-line="36" selection-start-column="6" selection-end-line="36" selection-end-column="6" />
+            <state relative-caret-position="399">
+              <caret line="19" column="29" selection-start-line="18" selection-start-column="29" selection-end-line="19" selection-end-column="29" />
               <folding>
                 <element signature="n#style#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
               </folding>
@@ -130,7 +125,6 @@
         <option value="$PROJECT_DIR$/login.html" />
         <option value="$PROJECT_DIR$/register.html" />
         <option value="$PROJECT_DIR$/request.html" />
-        <option value="$PROJECT_DIR$/imap.html" />
         <option value="$PROJECT_DIR$/Api/application/models/Contact.php" />
         <option value="$PROJECT_DIR$/Api/application/config/autoload.php" />
         <option value="$PROJECT_DIR$/.htaccess" />
@@ -142,6 +136,7 @@
         <option value="$PROJECT_DIR$/Api/application/models/Feedback_Model.php" />
         <option value="$PROJECT_DIR$/Api/application/controllers/Feedback.php" />
         <option value="$PROJECT_DIR$/feedback.html" />
+        <option value="$PROJECT_DIR$/imap.html" />
       </list>
     </option>
   </component>
@@ -152,6 +147,8 @@
     <sorting>DEFINITION_ORDER</sorting>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="-98" />
+    <option name="y" value="44" />
     <option name="width" value="1920" />
     <option name="height" value="1080" />
   </component>
@@ -160,6 +157,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -171,7 +169,6 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -222,14 +219,20 @@
       <workItem from="1523241128557" duration="21440000" />
       <workItem from="1523326867946" duration="1433000" />
       <workItem from="1523333399039" duration="568000" />
+      <workItem from="1523334946660" duration="1507000" />
+      <workItem from="1523342502398" duration="1381000" />
+      <workItem from="1523344286649" duration="1625000" />
+      <workItem from="1523345937351" duration="5554000" />
+      <workItem from="1523354084893" duration="1519000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="58644000" />
+    <option name="totallyTimeSpent" value="70230000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.18854167" />
       <window_info anchor="bottom" id="TODO" order="6" />
@@ -478,13 +481,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/map.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-9">
-          <caret line="5" column="4" selection-start-line="5" selection-start-column="4" selection-end-line="5" selection-end-column="27" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/confirm.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="203">
@@ -552,17 +548,7 @@
     <entry file="file://$PROJECT_DIR$/Api/application/models/Contact_Model.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="504">
-          <caret line="24" column="6" lean-forward="true" selection-start-line="2" selection-start-column="4" selection-end-line="24" selection-end-column="6" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/imap.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3003">
-          <caret line="173" column="80" selection-start-line="173" selection-start-column="80" selection-end-line="173" selection-end-column="80" />
-          <folding>
-            <element signature="n#div#0;n#body#0;n#html#0;n#!!top" />
-          </folding>
+          <caret line="24" column="6" selection-start-line="2" selection-start-column="4" selection-end-line="24" selection-end-column="6" />
         </state>
       </provider>
     </entry>
@@ -576,7 +562,28 @@
     <entry file="file://$PROJECT_DIR$/Api/application/controllers/Contact.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="504">
-          <caret line="24" column="5" lean-forward="true" selection-start-line="10" selection-start-column="3" selection-end-line="24" selection-end-column="5" />
+          <caret line="24" column="5" selection-start-line="10" selection-start-column="3" selection-end-line="24" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Api/application/controllers/Feedback.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="147">
+          <caret line="7" column="5" selection-start-line="7" selection-start-column="5" selection-end-line="7" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/map.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="105">
+          <caret line="5" column="4" selection-start-line="5" selection-start-column="4" selection-end-line="5" selection-end-column="27" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Api/application/models/Feedback_Model.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="273">
+          <caret line="13" column="63" selection-start-line="13" selection-start-column="63" selection-end-line="13" selection-end-column="63" />
         </state>
       </provider>
     </entry>
@@ -591,26 +598,25 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Api/application/models/Feedback_Model.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="273">
-          <caret line="13" column="63" selection-start-line="13" selection-start-column="63" selection-end-line="13" selection-end-column="63" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Api/application/controllers/Feedback.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="147">
-          <caret line="7" column="5" selection-start-line="7" selection-start-column="5" selection-end-line="7" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/feedback.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="756">
-          <caret line="36" column="6" lean-forward="true" selection-start-line="36" selection-start-column="6" selection-end-line="36" selection-end-column="6" />
+        <state relative-caret-position="399">
+          <caret line="19" column="29" selection-start-line="18" selection-start-column="29" selection-end-line="19" selection-end-column="29" />
           <folding>
             <element signature="n#style#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/imap.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="495">
+          <caret line="112" column="35" selection-start-line="112" selection-start-column="35" selection-end-line="112" selection-end-column="35" />
+          <folding>
+            <element signature="n#div#0;n#body#0;n#html#0;n#!!top" />
+            <element signature="n#style#0;n#div#0;n#from#0;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#1;n#from#0;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#3;n#from#0;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
           </folding>
         </state>
       </provider>
