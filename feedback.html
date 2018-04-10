@@ -20,7 +20,6 @@
             border-radius: 0;
             padding: 0px;
         }
-
         .container-p0{
             padding: 0px!important;
         }
@@ -31,14 +30,12 @@
             color: white!important;
         }
     </style>
-
-
 </head>
 <body>
 <div class="this-container this-metro-dark-red this-card this-padding">
     <center> <h3 > YADULY  CASINO </h3></center>
     <div class="container container-p0">
-        <nav class="navbar navbar-expand-lg navbar-light bg-faded this-text-white">
+        <nav class="navbar navbar-expand-lg navbar-light bg-faded this-text-white navbar-fixed-top">
             <a class="navbar-brand" href="/">Home</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -67,38 +64,51 @@
     </div>
 </div>
 <div class="container this-margin-top container-p0"  style="overflow: hidden; position:relative" >
+
     <div class="container" >
-        <form id="frmContact">
-           <div class="row justify-content-md-center">
-            <div class="col-md-6">
+        <form id="frmfeedback" method="post">
+            <div class="row justify-content-md-center">
+            <div class="col-sm-6">
                 <center>
-                    <h4 style="text-transform: uppercase; font-weight: bold">CONTACT US </h4></center>
+                    <h3 style="text-transform: uppercase; font-weight: bold">FeedBack   </h3></center>
                 <div class="form-group">
-                    <label  class="control-label">Name :  </label><br>
-                    <input  type="text" class="form-control" name="name" placeholder="name ">
+                    <label  class="control-label">Title :  </label><br>
+                    <input  type="text" class="form-control" name="title" placeholder="title " required>
                 </div>
                 <div class="form-group">
-                    <label  class="control-label">Email :  </label><br>
-                    <input  type="text" class="form-control" name="email" placeholder="email ">
+                    <label  class="control-label">TukTuk Number  :  </label><br>
+                    <input  type="text" class="form-control" name="tuktuk" placeholder="tuktuk " required>
                 </div>
-                <div class="input-group mb-3">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text" id="basic-addon1">+855 </span>
-                    </div>
-                    <input type="text" class="form-control" name="phone" placeholder="Phone" aria-label="Username"
-                           aria-describedby="basic-addon1">
+
+                <div class="form-group">
+                    <textarea class="form-control" rows="4" placeholder="your feedback..."  name="message" required=""></textarea>
                 </div>
                 <div class="form-group">
-                   <textarea class="form-control" rows="4" placeholder="message"  name="message" ></textarea>
-                </div>
-                <div class="form-group">
-                    <button type="submit" name="btn_send" class="btn btn-danger "> Send <span
-                            class="glyphicon glyphicon-log-in"></span> </button>
+                    <button type="submit" class="btn btn-danger "> Send <span class="glyphicon glyphicon-log-in"></span> </button>
                     <button type="reset" class="btn btn-danger "> Cancel </button>
                 </div>
             </div>
-           </div>
+            </div>
         </form>
+
+    </div>
+</div>
+<div class="modal fade" id="myModal">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header this-center">
+                <h6 class="modal-title">QR Code Sihalive</h6>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                  Thank you for your feedback us!
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Close</button>
+            </div>
+        </div>
     </div>
 </div>
 <footer class="container this-center this-margin-top ">
@@ -106,21 +116,26 @@
     <p> CopyRight@2018</p>
 </footer>
 <script>
-    $("#frmContact").submit(function(e) {
-        var url = "/Api/Contact/doInsert"; // the script where you handle the form input.
+    $("#frmfeedback").submit(function(e) {
+        var url = "/Api/Feedback/doInsert"; // the script where you handle the form input.
         $.ajax({
             type: "POST",
             url: url,
-            data: $("#frmContact").serialize(), // serializes the form's elements.
+            data: $("#frmfeedback").serialize(), // serializes the form's elements.
             success: function(data)
             {
-               // alert(data); // show response from the php script.
-                $("#frmContact")[0].reset();
+                if(data!==""){
+                    $("#frmfeedback")[0].reset();
+                    $('#myModal').modal('show');
+                }
+
             }
         });
         e.preventDefault(); // avoid to execute the actual submit of the form.
     });
 </script>
+
+
 
 </body>
 </html>
