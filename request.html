@@ -76,21 +76,21 @@
 
     <div class="container">
         <div class="row justify-content-md-center">
-
-
             <div class="col-md-6">
                 <form>
-
                         <center>
                             <h3 style="text-transform: uppercase; font-weight: bold">Welcome</h3></center>
                         <br>
-                        <div class="alert alert-success " role="alert">
+                        <div class="alert alert-success alert-dismissible fade show " role="alert">
                             <p> * Your have registration successful *  </p>
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
                         </div>
                     <label  class="control-label">You can request driver transport    </label><br>
                         <div class="input-group mb-3">
-                            <div class="input-group-prepend">
-                                <label class="input-group-text" for="inputGroupSelect01">Transport</label>
+                            <div class="input-group-prepend ">
+                                <label class="input-group-text this-metro-dark-red" for="inputGroupSelect01">Transport</label>
                             </div>
                             <select class="custom-select" id="inputGroupSelect01" required >
                                 <option value="1">Yes </option>
