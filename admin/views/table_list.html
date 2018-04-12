@@ -13,7 +13,11 @@
 				<div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count" ng-repeat="(key,row) in data.table_subtotal_fields ">
 					<span class="count_top"><i class="fa fa-dollar"></i>{{row.AS}}</span>
 					<div class="count" ng-bind="data.table_subtotal_data[key]">2500</div>
-				</div>	
+				</div>{{dd}}
+				<div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count" ng-repeat="row in socket_push_data">
+					<span class="count_top"><i class="fa fa-dollar" ng-bind="row.name"></i></span>
+					<div class="count" ng-bind="row.value">2500</div>
+				</div>				
 			</div>
 			<div class="row">
 				<div class="col-sm-2">
@@ -126,7 +130,12 @@
 						</thead>
 						<tbody>
 							<tr ng-repeat="row in data.table_row">
-								<td ng-repeat="(filed,value) in data.table_fields" ng-bind="row[filed]"></td>
+								<td ng-repeat="(filed,value) in data.table_fields" >
+									<div ng-if="value.type ==undefined" ng-bind="row[filed]"></div>
+									<div ng-if="value.type =='img'" >
+										<img ng-src="{{row[filed]}}"  />
+									</div>
+								</td>
 								<td ng-if="data.form.table_del !==undefined || data.form.table_edit !==undefined || data.table_action_list.length >0">
 									<button ng-if="data.form.table_del !==undefined" type="button" ng-click="del(row.id)" class="btn btn-default btn-xs">del</button>
 									<button ng-if="data.form.table_edit !==undefined" type="button" ng-click="edit(row.id)" class="btn btn-default btn-xs">edit</button>

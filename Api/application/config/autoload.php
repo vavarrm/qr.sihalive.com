@@ -66,7 +66,8 @@ $autoload['libraries'] = array(
 	'My_Language' =>'language',
 	'MyToken' =>'token',
 	'MySocketIO' =>'socketIO',
-	// 'session'
+	'MyQrcode' =>'qr',
+	'session'
 );
 
 /*

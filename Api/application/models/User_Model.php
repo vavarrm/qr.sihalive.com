@@ -21,20 +21,17 @@
 			}
 		}
 		
-		public function getUserForId($id)
+		
+		public function getUserByid($id)
 		{
+			$status ='000';
 			try
 			{
-			
-				$sql =" SELECT 
-							u_id, 
-							u_account, 
-							u_name 
-						FROM user 
-						WHERE u_id =?";
-				$bind =array(
+				$sql ="SELECT * FROM user WHERE id =?";
+				$bind= array(
 					$id
 				);
+				
 				$query = $this->db->query($sql, $bind);
 				$error = $this->db->error();
 				if($error['message'] !="")
@@ -42,7 +39,7 @@
 					$MyException = new MyException();
 					$array = array(
 						'el_system_error' 	=>$error['message'] ,
-						'status'	=>'000'
+						'status'	=>$status
 					);
 					
 					$MyException->setParams($array);
@@ -58,88 +55,99 @@
 			}
 		}
 		
-		public function checkUserCode($ary)
+		public function getUserByPhone($phone)
 		{
+			$status ='000';
 			try
 			{
-			
+				$sql ="SELECT * FROM user WHERE phone =?";
+				$bind= array(
+					$phone
+				);
+				
+				$query = $this->db->query($sql, $bind);
+				$error = $this->db->error();
+				if($error['message'] !="")
+				{
+					$MyException = new MyException();
+					$array = array(
+						'el_system_error' 	=>$error['message'] ,
+						'status'	=>$status
+					);
+					
+					$MyException->setParams($array);
+					throw $MyException;
+				}
+				$row = $query->row_array();
+				$query->free_result();
+				
+				return $row;
+			}	
+			catch(MyException $e)
+			{
+				throw $e;
+			}
+		}
+		
+		public function  register($ary)
+		{
+			$status = '000';
+			$row = array(
+				'affected_rows'=>0
+			);
+			try
+			{
+				$this->db->trans_begin();
 				if(empty($ary))
 				{
 					$MyException = new MyException();
 					$array = array(
 						'el_system_error' 	=>$error['message'] ,
-						'status'	=>'000'
+						'status'	=>$status
 					);
 					
 					$MyException->setParams($array);
 					throw $MyException;
 				}
-			
-				$sql =" SELECT 
-							count(*) AS total
-						FROM user 
-						WHERE u_id =? AND u_code=?";
+				
+				$sql ="	INSERT INTO user (last_name, first_name,phone, password)
+						VALUES(?,?,?,?)";
 				$bind =array(
-					$ary['u_id'],
-					$ary['u_code'],
+					$ary['fname'],
+					$ary['lname'],
+					$ary['phone'],
+					MD5($ary['password']),
 				);
 				$query = $this->db->query($sql, $bind);
 				$error = $this->db->error();
 				if($error['message'] !="")
 				{
+					if($error['code'] =='1062')
+					{
+						$status ='002';
+					}
 					$MyException = new MyException();
 					$array = array(
 						'el_system_error' 	=>$error['message'] ,
-						'status'	=>'000'
+						'status'	=>$status
 					);
 					
 					$MyException->setParams($array);
 					throw $MyException;
 				}
-				$row = $query->row_array();
-				$query->free_result();
-				return $row;
-			}	
-			catch(MyException $e)
-			{
-				throw $e;
-			}
-		}
-		
-		public function  getUserByaccount($account)
-		{
-			try
-			{
-			
-				$sql =" SELECT 
-							u_id, 
-							u_account, 
-							u_password ,
-							u_name 
-						FROM user 
-						WHERE u_account =?";
-				$bind =array(
-					$account
-				);
-				$query = $this->db->query($sql, $bind);
-				$error = $this->db->error();
-				if($error['message'] !="")
+				$affected_rows = $this->db->affected_rows();
+				$id = $this->db->insert_id();
+				$this->db->trans_commit();
+				if($affected_rows >0)
 				{
-					$MyException = new MyException();
-					$array = array(
-						'el_system_error' 	=>$error['message'] ,
-						'status'	=>'000'
-					);
-					
-					$MyException->setParams($array);
-					throw $MyException;
+					$row['affected_rows'] = $affected_rows ;
+					$row['user']  = $this->getUserByid($id);
 				}
-				$row = $query->row_array();
-				$query->free_result();
 				return $row;
 			}	
 			catch(MyException $e)
 			{
+				// $this->db->trans_rollback();
 				throw $e;
 			}
 			

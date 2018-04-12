@@ -370,7 +370,7 @@ $config['encryption_key'] = '';
 */
 $config['sess_driver'] = 'database';
 $config['sess_table_name'] = 'ci_sessions';
-$config['sess_cookie_name'] = 'pokerinsurance';
+$config['sess_cookie_name'] = 'qr_sihalive';
 $config['sess_expiration'] = 7200;
 $config['sess_save_path'] = NULL;
 $config['sess_match_ip'] = FALSE;

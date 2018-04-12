@@ -32,8 +32,8 @@
 				$ary['function'],
 				$ary['el_system_error'],
 			);
-			$query = $this->db->query($sql, $bind);
 			
+			$query = $this->db->query($sql, $bind);
 		}
 	}
 ?>

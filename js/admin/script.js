@@ -112,23 +112,25 @@ var bodyCtrl = function($scope, $compile, $cookies, apiService, Websokect)
 		data = (angular.fromJson(data));
 		$scope.$apply(function() {
 			$scope.socket_push_data  = data;
+			$scope.dd="D";
+			console.log($scope.socket_push_data);
 		});
 	}
 
-	$scope.$watch('socket_push_data.order_total', function(newValue, oldValue) {
-		//這裡輸入觸發$watch之後，欲觸發的行為
-		if(typeof newValue !="undefined" && typeof oldValue!="undefined")
-		{
-			if(newValue >=oldValue)
-			{
-				$scope.socket_push_data.order_total_add = true;
-			}else
-			{
-				$scope.socket_push_data.order_total_add = false;
-			}
-		}
+	// $scope.$watch('socket_push_data.order_total', function(newValue, oldValue) {
+		// 這裡輸入觸發$watch之後，欲觸發的行為
+		// if(typeof newValue !="undefined" && typeof oldValue!="undefined")
+		// {
+			// if(newValue >=oldValue)
+			// {
+				// $scope.socket_push_data.order_total_add = true;
+			// }else
+			// {
+				// $scope.socket_push_data.order_total_add = false;
+			// }
+		// }
 		
-	},true);
+	// },true);
 	$scope.init = function()
 	{
 		var promise = apiService.adminApi('AdminApi','getUser');
@@ -166,12 +168,13 @@ var bodyCtrl = function($scope, $compile, $cookies, apiService, Websokect)
 					};
 					dialog(obj);
 				}
-				// var socket = Websokect.open();
-				// var uid = '001';
-				// socket.on('connect', function(){
-					// socket.emit('login', uid);
-				// });
-				// socket.on('update_data',$scope.update_data);
+				var socket = Websokect.open();
+
+				var uid = 'system';
+				socket.on('connect', function(){
+					socket.emit('login', uid);
+				});
+				socket.on('update_data',$scope.update_data);
 			},
 			function() {
 				var obj ={
@@ -1006,11 +1009,11 @@ adminApp.factory('Websokect', ['$q', '$rootScope', '$http', function($q, $rootSc
 {
 	return {
 		open :function(){
-			// var socket = {};
-			// var uid ="001";
-			// var host =location.protocol + '//' + location.host ;
-			// socket = io(host+':2120', {secure: true});
-			// return socket;
+			var socket = {};
+			var uid ="system";
+			var host =location.protocol + '//' + location.host ;
+			socket = io(host+':2120', {secure: true});
+			return socket;
 		}
     };
 }]);
