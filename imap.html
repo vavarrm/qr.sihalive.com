@@ -9,8 +9,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
     <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
     <script src="https://netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src='https://maps.google.com/maps/api/js?sensor=false&libraries=places'></script>
-    <script src="https://www.jqueryscript.net/demo/Location-Picker-Place-Autocomplete-Plugin-For-Google-Maps-Location-Picker/dist/locationpicker.jquery.min.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/css/colors-metro.css">
     <link rel="stylesheet" href="/css/shop-style.css">
@@ -21,10 +19,14 @@
             padding: 0px;
         }
         #map {
+            height: 100%;
             width: 100%;
-            height: 50%;
-            min-height:420px;
+            min-height: 400px;
         }
+       .form-control{
+           width: 100%!important;
+           border-radius: 0px;
+       }
         .container-p0{
             padding: 0px!important;
         }
@@ -33,15 +35,24 @@
             border-radius: 0;
             padding: 0px;
         }
-
         .container-p0{
             padding: 0px!important;
+
+            position:relative;
+            margin-top: -5px;
         }
         li a{
             color: #fff!important;
         }
         .navbar-brand{
             color: white!important;
+        }
+        .map_size{
+            width: 100%; height: 100%;
+        }
+        .form-group{
+            padding-left: 5px!important;
+            padding-right: 5px!important;
         }
 
     </style>
@@ -80,103 +91,162 @@
     </div>
 </div>
 
-<div class="container this-margin-top container-p0"  style="overflow: hidden; position:relative" >
-    <div id="map"></div>
-    <div class="container" >
-        <from>
-            <div class="form-group" >
+<div class="container this-margin-top container-p0"   >
 
-                <select class="form-control " id="start">
-                    <option value="333 Apartments">333 Apartments</option>
-                    <option value="7 Jan Boutique">7 Jan Boutique</option>
-                    <option value="Aristocrat Residence and Hote">Aristocrat Residence and Hote</option>
-                    <option value="Bao Mai Resort & Casino">Bao Mai Resort & Casino</option>
-                </select>
+    <div class="container container-p0 this-white" >
+        <form>
+            <div class="form-group" style="; z-index: 1000;position: absolute;width: 50%" >
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend ">
+                        <label class="input-group-text this-metro-dark-red" for="inputGroupSelect01">From</label>
+                    </div>
+                    <select class="custom-select" id="start">
+                        <option value=" 10.616247, 103.533943">Happy Coffee</option>
+                        <option value="10.616248,103.523762">333 Apartments</option>
+                        <option value="10.604387,103.534692">7 Jan Boutique</option>
+                    </select>
+                </div>
+
             </div>
+            <div class="form-group "style="; z-index: 1000;position: absolute; right: 0px; margin-left: 45%; width: 50%" >
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend ">
+                        <label class="input-group-text this-metro-dark-red" for="inputGroupSelect01">To : </label>
+                    </div>
+                    <select class="custom-select" id="end" >
+                        <option value="10.607372,103.521362">Aristocrat Residence and Hotel</option>
+                        <option value="10.634437,103.504662">Backpacker Heaven</option>
+                    </select>
+                </div>
 
-            <div class="form-group this-hide" >
-                <label >Waypoints: </label>
-                <select  id="waypoints" class="form-control">
-                    <option value="333 Apartments">333 Apartments</option>
-                    <option value="7 Jan Boutique">7 Jan Boutique</option>
-                    <option value="Aristocrat Residence and Hote">Aristocrat Residence and Hote</option>
-                    <option value="Bao Mai Resort & Casino">Bao Mai Resort & Casino</option>
-                </select>
             </div>
-            <div class="form-group" >
+            <div class="this-container" id="map"></div>
+            <div class="this-container this-padding this-metro-dark-red  " id="kms" style="font-size: 13px" >Where
+            you go ?</div>
 
-                <select class="form-control " id="end" readonly="">
-                    <option value="Yadoly Casino">Yadoly Casino</option>
-                </select>
+            <div class="form-group">
+                <label> You can request driver transport </label>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend ">
+                        <label class="input-group-text this-metro-dark-red" for="inputGroupSelect01">Transport</label>
+                    </div>
+                    <select class="custom-select" id="inputGroupSelect01" required >
+                        <option value="1">Yes </option>
+                        <option value="2">No</option>
+                    </select>
+                </div>
             </div>
             <div class="form-group">
-                <button class="btn btn-danger" type="submit" id="submit" ><i class="fa fa-male"></i> Load </button>
+                <textarea class="form-control" rows="2" placeholder="message"  name="message" required></textarea>
             </div>
+            <div class="form-group">
+                <button type="submit" class=" btn btn-danger"> Send </button>
+            </div>
+        </form>
 
 
-        </from>
-        <div id="directions-panel"></div>
     </div>
 </div>
-
 <!-- Replace the value of the key parameter with your own API key. -->
 <script async defer
         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBSYg7lk_d7AzrXc3L-nz6iOdIcnuCx4EU&callback=initMap">
 </script>
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?libraries=places&sensor=false"></script>
+
 <script>
     function initMap() {
         var directionsService = new google.maps.DirectionsService;
-        var directionsDisplay = new google.maps.DirectionsRenderer;
+        var directionsDisplay = new google.maps.DirectionsRenderer({
+            draggable: true,
+            polylineOptions: {
+                strokeColor: "#F24639",
+                strokeWeight:5,
+            },
+			suppressMarkers: true
+        });
+
+
         var map = new google.maps.Map(document.getElementById('map'), {
             zoom: 15,
             center: {lat: 10.607683, lng: 103.525305},
-
+            gestureHandling: "greedy",
+            mapTypeId: google.maps.MapTypeId.ROADMAP,
+            unitSystem: google.maps.UnitSystem.METRIC,
+            provideRouteAlternatives: true,
+            suppressMarkers: true,
         });
         directionsDisplay.setMap(map);
-
-        document.getElementById('submit').addEventListener('click', function() {
-            calculateAndDisplayRoute(directionsService, directionsDisplay);
+        var onChangeHandler = function() {
+            calculateAndDisplayRoute(directionsService, directionsDisplay, map);
+        };
+        document.getElementById('start').addEventListener('change', onChangeHandler);
+        document.getElementById('end').addEventListener('change', onChangeHandler);
+    }
+   /* function makeMarker(position, icon, title,map) {
+        new google.maps.Marker({
+            position: position,
+            icon: icon,
+            title: title,
+            map:map
         });
     }
-
-    function calculateAndDisplayRoute(directionsService, directionsDisplay) {
-        var waypts = [];
-        var checkboxArray = document.getElementById('start');
-        for (var i = 0; i < checkboxArray.length; i++) {
-            if (checkboxArray.options[i].selected) {
-                waypts.push({
-                    location: checkboxArray[i].value,
-                    stopover: true
-                });
-            }
-        }
-
+    var icons = {
+        start__: new google.maps.MarkerImage(
+            'http://maps.google.com/mapfiles/ms/micons/blue.png',
+            new google.maps.Size(44, 32),
+            new google.maps.Point(0, 0),
+            new google.maps.Point(22, 32)),
+        end__: new google.maps.MarkerImage(
+            'http://maps.google.com/mapfiles/ms/micons/green.png',
+            new google.maps.Size(44, 32),
+            new google.maps.Point(0, 0),
+            new google.maps.Point(22, 32))
+    };*/
+    function calculateAndDisplayRoute(directionsService, directionsDisplay, map) 
+	{
+	
+        var km='';
+        var from=document.getElementById('start').value;
+        var to=document.getElementById('end').value;
         directionsService.route({
-            origin: document.getElementById('start').value,
-            destination: document.getElementById('end').value,
-            waypoints: waypts,
-            optimizeWaypoints: true,
-            travelMode: 'DRIVING'
+            origin:from ,
+            destination:to ,
+            provideRouteAlternatives: false,
+            travelMode: google.maps.TravelMode.DRIVING,
 
         }, function(response, status) {
-            if (status === 'OK') {
-			console.log(response);
+			<!-- console.log(map); -->
+            if (status === google.maps.DirectionsStatus.OK) {
                 directionsDisplay.setDirections(response);
-                var route = response.routes[0];
-                var summaryPanel = document.getElementById('directions-panel');
-                summaryPanel.innerHTML = '';
-                // For each route, display summary information.
-				var totalDistance = 0;
-                for (var i = 0; i < route.legs.length; i++) {
-                    var routeSegment = i ;
-                    summaryPanel.innerHTML += " Rout : <br/> " + routeSegment +
-                        '';
-                    summaryPanel.innerHTML += route.legs[i].start_address + 'to ';
-                    summaryPanel.innerHTML += route.legs[i].end_address + '<br>';
-                    summaryPanel.innerHTML += route.legs[i].distance.text+'<br/>';
-					totalDistance += route.legs[i].distance.value;
-                }
-				console.log(totalDistance);
+                km= response.routes[0].legs[0].distance.value;
+                from=document.getElementById('start');
+                to=document.getElementById('end');
+				 var endstep  = response.routes[0].legs[0].steps.length;
+				 var marker = new google.maps.Marker({
+					position: response.routes[0].legs[0].steps[0].start_point,
+					map: map,
+					title: 'Hello World!',
+					icon :'https://image.flaticon.com/icons/svg/33/33622.svg'
+				  });
+				  var marker = new google.maps.Marker({
+					position: response.routes[0].legs[0].steps[endstep-1].end_point,
+					map: map,
+					title: 'Hello World!'
+				  });
+               /* new google.maps.DirectionsRenderer({
+                    map: map,
+                    directions: response,
+                    suppressMarkers: true,
+                });
+                makeMarker(from.options[from.selectedIndex].value, icons.start__,"AA",map);
+                makeMarker(to.options[to.selectedIndex].value, icons.end__,"BB",map);*/
+                var frm= from.options[from.selectedIndex].text;
+                var end= to.options[to.selectedIndex].text;
+                document.getElementById('kms').innerHTML='From : '+frm + ' to '+ end + '<br/>= ' +km/1000 +' Km';
+                //-----> New
+				
+                //------>end
+
             } else {
                 window.alert('Directions request failed due to ' + status);
             }
