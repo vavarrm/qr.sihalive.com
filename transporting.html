@@ -62,58 +62,27 @@
     </div>
 </div>
 <div class="container " >
-    <div class="row justify-content-md-center ">
+    <div class="row justify-content-md-center this-margin-top ">
 
-        <div class="col-sm-6">
-            <form id="frmfeedback" method="post">
+        <div class="col-sm-12 this-center">
+            <h4 class="text-uppercase"> Tuk Tuk Transportation </h4>
+            <hr/>
+            <br/>
             <center>
-                <h3 style="text-transform: uppercase; font-weight: bold">FeedBack   </h3></center>
-            <div class="form-group">
-                <label  class="control-label">Title :  </label><br>
-                <input  type="text" class="form-control" name="title" placeholder="title " required>
-            </div>
-            <div class="form-group">
-                <label  class="control-label">TukTuk Number  :  </label><br>
-                <input  type="text" class="form-control" name="tuktuk" placeholder="tuktuk " required>
-            </div>
-
-            <div class="form-group">
-                <textarea class="form-control" rows="4" placeholder="your feedback..."  name="message" required=""></textarea>
-            </div>
-            <div class="form-group">
-                <button type="submit" class="btn btn-danger "> Send <span class="glyphicon glyphicon-log-in"></span> </button>
-                <button type="reset" class="btn btn-danger "> Cancel </button>
-            </div>
-            </form>
+                <img src="https://www.tuktukhop.com/img/tuktuk.png" class="img-fluid  "/>
+                <br/><br/><br/>
+                <p> Driver is on the Road </p>
+                <img src="https://thumbs.gfycat.com/WellgroomedImpressiveAoudad-size_restricted.gif"
+                     class="img-fluid " width="130">
+                <p> Waiting.... </p>
+            </center>
         </div>
-
     </div>
 </div>
-<footer class="container this-center this-margin-top ">
-    <br/><br/>
+<footer class="container this-center this-border-top ">
+    <br/>
     <p> CopyRight@2018</p>
 </footer>
-<script>
-    $("#frmfeedback").submit(function(e) {
-        var url = "/Api/Feedback/doInsert"; // the script where you handle the form input.
-        $.ajax({
-            type: "POST",
-            url: url,
-            data: $("#frmfeedback").serialize(), // serializes the form's elements.
-            success: function(data)
-            {
-                if(data!==""){
-                    $("#frmfeedback")[0].reset();
-                    $('#myModal').modal('show');
-                }
-
-            }
-        });
-        e.preventDefault(); // avoid to execute the actual submit of the form.
-    });
-</script>
-
-
 
 </body>
 </html>
