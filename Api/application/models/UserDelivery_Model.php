@@ -21,6 +21,39 @@
 			}
 		}
 
+		public function getRowByUserIDAndEnd($user_id)
+		{
+			$status ='000';
+			try
+			{
+				$sql ="SELECT * FROM user_delivery WHERE  user_id=? AND status = 'END'";
+				$bind= array(
+					$user_id
+				);
+				
+				$query = $this->db->query($sql, $bind);
+				$error = $this->db->error();
+				if($error['message'] !="")
+				{
+					$MyException = new MyException();
+					$array = array(
+						'el_system_error' 	=>$error['message'] ,
+						'status'	=>$status
+					);
+					
+					$MyException->setParams($array);
+					throw $MyException;
+				}
+				$row = $query->row_array();
+				$query->free_result();
+				return $row;
+			}	
+			catch(MyException $e)
+			{
+				throw $e;
+			}
+		}
+		
 		public function insert($ary)
 		{
 			$status='000';

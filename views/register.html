@@ -1,10 +1,5 @@
 <div ng-init="data.step=1;init('registerForm')">
-	<div class="this-container this-metro-dark-red this-padding this-card ">
-		<h3 class="text-center"> YADULY  CASINO </h3>
-		<div class="text-right">
-			<a href="#">English</a> / <a href="#">Chines</a>
-		</div>
-	</div>
+	<div  ng-include="'/views/nav.html'"></div>
 	<div class="container" ng-show="data.step==1">
 		<div class="this-container">
 			<form class="col-12">
@@ -54,5 +49,7 @@
 		</div>
 	</div>
 	<div class="container" ng-show="data.step==2" ng-include="'/views/confirm.html'"></div>
-	<div  ng-show="data.step==3"  ng-include="'/views/regOK.html'"></div>
+	<div  ng-show="data.step==3"  ng-include="'/views/calltuktuk.html'"></div>
+	<div  ng-show="data.step==4"  ng-include="'/views/wait.html'"></div>
 </div>
+<div  ng-include="'/views/footer.html'"></div>

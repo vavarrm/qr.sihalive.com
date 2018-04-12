@@ -25,6 +25,12 @@ class MyFunc
 		return $cip;
 	}
 	
+	public function getUserSess($user)
+	{
+		$token = sprintf("%s:%s",$user['id'],$_SERVER['USER_SESS_TOKEN']);
+		return md5($token);
+	}
+	
 	public function validateDate($date, $format = 'Y-m-d')
 	{
 		$d = DateTime::createFromFormat($format, $date);

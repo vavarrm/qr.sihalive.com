@@ -12,6 +12,9 @@ pokerInsuranceApp.config(function($routeProvider)
     }).when("/",
 	{
 		redirectTo:"/Api/register/register"
+    }).when("/admin",
+	{
+		redirectTo:"/admin"
     }).otherwise(
 		{
 			controller: 'Error404Controller',
@@ -29,14 +32,45 @@ var LoginCtrl = function($scope ,$routeParams, apiService,$cookies)
 pokerInsuranceApp.controller('LoginCtrl',  ['$scope' ,'$routeParams', 'apiService' ,'$cookies', LoginCtrl]);
 
 
-var pageCtrl = function($scope ,$routeParams, apiService, $cookies)
+var pageCtrl = function($scope ,$routeParams, apiService, $cookies, Websokect)
 {
+	
+	
+	
 	$scope.data =
 	{
 		input :{},
 		urlParams:{},
 		response :{}
 	}
+	
+	var promise = apiService.Api('/Api/User/getUser');
+	promise.then
+	(
+		function(r) 
+		{
+			
+			if(r.data.status =="200")
+			{
+				$scope.data.islogin = r.data.body.islogin;
+				console.log(r.data.body);
+				var socket = Websokect.open();
+				var uid = '001';
+				socket.on('connect', function(){
+					socket.emit('login', uid);
+				});
+				// socket.on('update_data',$scope.update_data);
+			}
+		},
+		function() 
+		{
+			
+			var obj ={
+				'message' :'system error'
+			};
+			dialog(obj);
+		}
+	)
 	
 	var strUrl = location.href;
 	var getPara, ParaVal;
@@ -73,6 +107,7 @@ var pageCtrl = function($scope ,$routeParams, apiService, $cookies)
 				if(r.data.status =="200")
 				{
 					$scope.data.response = r.data.body;
+					$scope.step = 4;
 				}else
 				{
 					var obj ={
@@ -92,9 +127,54 @@ var pageCtrl = function($scope ,$routeParams, apiService, $cookies)
 		)
 	}
 	
-	$scope.init = function()
+	$scope.login =  function()
 	{
-		var promise = apiService.Api('/Api/'+$routeParams.controller+'/registerForm', $scope.data.urlParams);
+		if($scope.ajaxload == true)
+		{
+			var obj =
+			{
+				'message' :'loading.....',
+			};
+			dialog(obj);
+			return false;
+		}
+		$scope.ajaxload = true;	
+		var promise = apiService.Api('/Api/'+$routeParams.controller+'/login', $scope.data.input);
+		promise.then
+		(
+			function(r) 
+			{
+				$scope.ajaxload = false;
+				if(r.data.status =="200")
+				{
+					$scope.data.islogin = r.data.body.islogin;
+					var obj ={
+						'message' :r.data.message
+					};
+					dialog(obj);
+				}else
+				{
+					var obj ={
+					'message' :r.data.message
+					};
+					dialog(obj);
+				}
+				
+			},
+			function() 
+			{
+				$scope.ajaxload = false;
+				var obj ={
+					'message' :'system error'
+				};
+				dialog(obj);
+			}
+		)
+	}
+	
+	$scope.init = function(func)
+	{
+		var promise = apiService.Api('/Api/'+$routeParams.controller+'/'+func, $scope.data.urlParams);
 		promise.then
 		(
 			function(r) 
@@ -102,7 +182,12 @@ var pageCtrl = function($scope ,$routeParams, apiService, $cookies)
 				
 				if(r.data.status =="200")
 				{
-					$scope.data.response = r.data.body;
+					$scope.data.response = r.data.body
+					if($scope.data.response.isuse =='0')
+					{
+						$scope.data.step=3;
+					}
+					
 				}else
 				{
 					var obj ={
@@ -206,10 +291,6 @@ var pageCtrl = function($scope ,$routeParams, apiService, $cookies)
 				$scope.ajaxload = false;
 				if(r.data.status =="200")
 				{
-					var obj ={
-					'message' :r.data.message
-					};
-					dialog(obj);
 					$scope.data.step=3;
 				}else
 				{
@@ -286,7 +367,7 @@ var pageCtrl = function($scope ,$routeParams, apiService, $cookies)
 		
 	}
 }
-pokerInsuranceApp.controller('pageCtrl',  ['$scope' ,'$routeParams', 'apiService','$cookies', pageCtrl]);
+pokerInsuranceApp.controller('pageCtrl',  ['$scope' ,'$routeParams', 'apiService','$cookies', 'Websokect' , pageCtrl]);
 
 var bodyCtrl = function($scope ,$routeParams, apiService, $cookies)
 {
@@ -316,3 +397,17 @@ var apiService = function($http,$cookies)
     };
 }
 pokerInsuranceApp.factory('apiService', ['$http','$cookies', apiService]);
+
+
+pokerInsuranceApp.factory('Websokect', ['$q', '$rootScope', '$http', function($q, $rootScope, $http) 
+{
+	return {
+		open :function(){
+			var socket = {};
+			var uid ="001";
+			var host =location.protocol + '//' + location.host ;
+			socket = io(host+':2120', {secure: true});
+			return socket;
+		}
+    };
+}]);

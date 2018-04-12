@@ -67,7 +67,7 @@ $autoload['libraries'] = array(
 	'MyToken' =>'token',
 	'MySocketIO' =>'socketIO',
 	'MyQrcode' =>'qr',
-	// 'session'
+	'session'
 );
 
 /*

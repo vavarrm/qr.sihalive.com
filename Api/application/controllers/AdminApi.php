@@ -129,7 +129,7 @@ class AdminApi extends CI_Controller {
 			}
 			$output['body']['admin_user'] = $decrypt_data;
 			$output['body']['socket_push_data'] = array(
-				'order_total'	=>10
+				'first_delivery'	=>array()
 			);
 			$data = $this->admin_user->getAdminMenuList($decrypt_data);
 			$output['body']['menu_list'] =$data['list'];

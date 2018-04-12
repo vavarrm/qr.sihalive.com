@@ -13,7 +13,11 @@
 				<div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count" ng-repeat="(key,row) in data.table_subtotal_fields ">
 					<span class="count_top"><i class="fa fa-dollar"></i>{{row.AS}}</span>
 					<div class="count" ng-bind="data.table_subtotal_data[key]">2500</div>
-				</div>	
+				</div>{{dd}}
+				<div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count" ng-repeat="row in socket_push_data">
+					<span class="count_top"><i class="fa fa-dollar" ng-bind="row.name"></i></span>
+					<div class="count" ng-bind="row.value">2500</div>
+				</div>				
 			</div>
 			<div class="row">
 				<div class="col-sm-2">
