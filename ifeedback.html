@@ -62,55 +62,32 @@
     </div>
 </div>
 <div class="container " >
-        <div class="row ">
-            <div class="this-container this-padding">
-                <nav>
-                    <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                        <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab"
-                           aria-controls="nav-home" aria-selected="true">Review  </a>
-                        <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-profile" role="tab"
-                           aria-controls="nav-profile" aria-selected="false">Review History </a>
-                    </div>
-                </nav>
-                <div class="tab-content this-margin-top" id="nav-tabContent">
-                    <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
-                        <form id="frmfeedback" method="post" class="this-margin-top">
-                            <div class="row ">
-                                <div class="row justify-content-md-center this-border">
-                                    <div class="col-sm-4 " style="padding: 0px">
-                                        <img src="https://i.pinimg.com/originals/7e/de/7d/7ede7d417d214a2486a7adef945653af.jpg" class="img-fluid  ">
-                                    </div>
-                                    <div class="col-sm-8 this-padding">
-                                        <h5> Name...... </h5>
-                                        <p> your message </p>
-                                        <div class="">
-                                            <a href="/ifeedback.html" class="btn btn-danger btn-sm">
-                                                Review
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                    <div class="tab-pane fade " id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
-                        <br/>
-                        <div class="row this-border" >
-                                    <div class="col-sm-4" style="padding: 0px">
-                                        <img src="https://i.pinimg.com/originals/7e/de/7d/7ede7d417d214a2486a7adef945653af.jpg" class="img-fluid">
-                                    </div>
-                                    <div class="col-sm-8 this-padding">
-                                        <h5> Name...... </h5>
-                                        <p> your message </p>
+    <div class="row justify-content-md-center ">
 
-                                    </div>
-                        </div>
-
-                    </div>
-                </div>
+        <div class="col-sm-6">
+            <form id="frmfeedback" method="post">
+            <center>
+                <h3 style="text-transform: uppercase; font-weight: bold">FeedBack   </h3></center>
+            <div class="form-group">
+                <label  class="control-label">Title :  </label><br>
+                <input  type="text" class="form-control" name="title" placeholder="title " required>
+            </div>
+            <div class="form-group">
+                <label  class="control-label">TukTuk Number  :  </label><br>
+                <input  type="text" class="form-control" name="tuktuk" placeholder="tuktuk " required>
             </div>
 
+            <div class="form-group">
+                <textarea class="form-control" rows="4" placeholder="your feedback..."  name="message" required=""></textarea>
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-danger "> Send <span class="glyphicon glyphicon-log-in"></span> </button>
+                <button type="reset" class="btn btn-danger "> Cancel </button>
+            </div>
+            </form>
         </div>
+
+    </div>
 </div>
 <footer class="container this-center this-margin-top ">
     <br/><br/>

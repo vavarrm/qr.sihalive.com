@@ -22,6 +22,25 @@
          {
              throw $e;
          }
+     }
 
+     public function getFeedback(){
+         try
+         {
+           $this->db->select('*');
+             $query = $this->db->get('feedback');
+             $result = $query->result_array();
+                $count = count($result);
+                if(empty($count)){
+                    return false;
+                }
+                else{
+                    return $result;
+                }
+         }
+         catch(MyException $e)
+         {
+             throw $e;
+         }
      }
  }

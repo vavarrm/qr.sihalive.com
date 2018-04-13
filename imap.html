@@ -160,11 +160,10 @@
             draggable: true,
             polylineOptions: {
                 strokeColor: "#F24639",
-                strokeWeight:5,
+                strokeWeight:3,
             },
 			suppressMarkers: true
         });
-
 
         var map = new google.maps.Map(document.getElementById('map'), {
             zoom: 15,
@@ -177,34 +176,15 @@
         });
         directionsDisplay.setMap(map);
         var onChangeHandler = function() {
+
             calculateAndDisplayRoute(directionsService, directionsDisplay, map);
         };
         document.getElementById('start').addEventListener('change', onChangeHandler);
         document.getElementById('end').addEventListener('change', onChangeHandler);
     }
-   /* function makeMarker(position, icon, title,map) {
-        new google.maps.Marker({
-            position: position,
-            icon: icon,
-            title: title,
-            map:map
-        });
-    }
-    var icons = {
-        start__: new google.maps.MarkerImage(
-            'http://maps.google.com/mapfiles/ms/micons/blue.png',
-            new google.maps.Size(44, 32),
-            new google.maps.Point(0, 0),
-            new google.maps.Point(22, 32)),
-        end__: new google.maps.MarkerImage(
-            'http://maps.google.com/mapfiles/ms/micons/green.png',
-            new google.maps.Size(44, 32),
-            new google.maps.Point(0, 0),
-            new google.maps.Point(22, 32))
-    };*/
+    var  mstart ="";
     function calculateAndDisplayRoute(directionsService, directionsDisplay, map) 
 	{
-	
         var km='';
         var from=document.getElementById('start').value;
         var to=document.getElementById('end').value;
@@ -215,7 +195,6 @@
             travelMode: google.maps.TravelMode.DRIVING,
 
         }, function(response, status) {
-			<!-- console.log(map); -->
             if (status === google.maps.DirectionsStatus.OK) {
                 directionsDisplay.setDirections(response);
                 km= response.routes[0].legs[0].distance.value;
@@ -226,32 +205,23 @@
 					position: response.routes[0].legs[0].steps[0].start_point,
 					map: map,
 					title: 'Hello World!',
-					icon :'https://image.flaticon.com/icons/svg/33/33622.svg'
+					icon :'http://icons.iconarchive.com/icons/icons-land/vista-map-markers/32/Map-Marker-Marker-Outside-Chartreuse-icon.png'
 				  });
-				  var marker = new google.maps.Marker({
+				  var mstart = new google.maps.Marker({
 					position: response.routes[0].legs[0].steps[endstep-1].end_point,
 					map: map,
 					title: 'Hello World!'
 				  });
-               /* new google.maps.DirectionsRenderer({
-                    map: map,
-                    directions: response,
-                    suppressMarkers: true,
-                });
-                makeMarker(from.options[from.selectedIndex].value, icons.start__,"AA",map);
-                makeMarker(to.options[to.selectedIndex].value, icons.end__,"BB",map);*/
+
                 var frm= from.options[from.selectedIndex].text;
                 var end= to.options[to.selectedIndex].text;
                 document.getElementById('kms').innerHTML='From : '+frm + ' to '+ end + '<br/>= ' +km/1000 +' Km';
-                //-----> New
-				
-                //------>end
-
             } else {
                 window.alert('Directions request failed due to ' + status);
             }
         });
     }
+
 </script>
 </body>
 </html>
