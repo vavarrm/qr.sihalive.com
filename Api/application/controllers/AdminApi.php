@@ -8,7 +8,7 @@ class AdminApi extends CI_Controller {
 	{
 		parent::__construct();	
 		$this->load->model('AdminUser_Model', 'admin_user');
-		$this->load->library('session');
+		$this->load->model('UserDelivery_Model', 'delivery');
 		$this->response_code = $this->language->load('admin_response');
 		$this->request = json_decode(trim(file_get_contents('php://input'), 'r'), true);
 		$this->get = $this->input->get();
@@ -127,9 +127,11 @@ class AdminApi extends CI_Controller {
 				$MyException->setParams($array);
 				throw $MyException;
 			}
+	
+			$newfixedQr = $this->delivery->getCountByStatus('start');
 			$output['body']['admin_user'] = $decrypt_data;
 			$output['body']['socket_push_data'] = array(
-				'first_delivery'	=>array()
+				'newfixedQr'	=>$newfixedQr
 			);
 			$data = $this->admin_user->getAdminMenuList($decrypt_data);
 			$output['body']['menu_list'] =$data['list'];

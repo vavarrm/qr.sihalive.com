@@ -72,30 +72,32 @@ $sender_io->on('workerStart', function(){
     $inner_http_worker = new Worker('http://0.0.0.0:2121');
     // 当http客户端发来数据时触发
     $inner_http_worker->onMessage = function($http_connection, $data){
-        global $uidConnectionMap;
+        global $uidConnectionMap, $db;
         $_POST = $_POST ? $_POST : $_GET;
         // 推送数据的url格式 type=publish&to=uid&content=xxxx
-        switch(@$_POST['type']){
+        switch(@$_POST['type'])
+		{
             case 'publish':
                 global $sender_io;
                 $to = @$_POST['to'];
-                $to = 'system';
-                $_POST['content'] = htmlspecialchars(@$_POST['content']);
+                $content = htmlspecialchars(@$_POST['content']);
                 $action = htmlspecialchars(@$_POST['action']);
-				$sender_io->to($to)->emit($action, $action);
-                // 有指定uid则向uid所在socket组发送数据
-                // if($to){
-                    // $sender_io->to($to)->emit('new_msg', $_POST['content']);
-                // 否则向所有uid推送数据
-                // }else{
-                    // $sender_io->emit('new_msg', @$_POST['content']);
-                // }
-                // http接口返回，如果用户离线socket返回fail
+				
+				switch($action)
+				{
+					case 'uploadFixedQr':
+						$row= $db->row("SELECT COUNT(*) AS value FROM user_delivery WHERE status='start'");
+						$content = $row;
+					break;
+				}
+				
+				$sender_io->to($to)->emit($action, json_encode($content));
                 if($to && !isset($uidConnectionMap[$to])){
                     return $http_connection->send('offline');
                 }else{
                     return $http_connection->send('ok');
                 }
+			break;
         }
         return $http_connection->send('fail');
     };
@@ -103,19 +105,15 @@ $sender_io->on('workerStart', function(){
     $inner_http_worker->listen();
 
     // 一个定时器，定时向所有uid推送当前uid在线数及在线页面数
-    Timer::add(5, function(){
+    Timer::add(30, function(){
 		
         global $uidConnectionMap, $sender_io, $last_online_count, $last_online_page_count,$db;
         $online_count_now = count($uidConnectionMap);
         $online_page_count_now = array_sum($uidConnectionMap);
-        // 只有在客户端在线数变化了才广播，减少不必要的客户端通讯
-        // if($last_online_count != $online_count_now || $last_online_page_count != $online_page_count_now)
-        // {
-			$row= $db->row("SELECT COUNT(*) AS value FROM user_delivery WHERE status='start'");
-			$ary['first_delivery'] = $row;
-			$json = json_encode($ary);
-            $sender_io->emit('update_data', $json);
-        // }
+		$row= $db->row("SELECT COUNT(*) AS value FROM user_delivery WHERE status='start'");
+		$ary['newfixedQr'] = $row;
+		$json = json_encode($ary);
+		$sender_io->emit('update_data', $json);
     });
 });
 

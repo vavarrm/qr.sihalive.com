@@ -112,10 +112,18 @@ var bodyCtrl = function($scope, $compile, $cookies, apiService, Websokect)
 		data = (angular.fromJson(data));
 		$scope.$apply(function() {
 			$scope.socket_push_data  = data;
-			$scope.dd="D";
-			console.log($scope.socket_push_data);
 		});
 	}
+	
+	$scope.uploadFixedQr = function(data)
+	{
+		data = (angular.fromJson(data));
+		$scope.$apply(function() {
+			$scope.socket_push_data.newfixedQr  = data;
+			console.log(data);
+		});
+	}
+
 
 	// $scope.$watch('socket_push_data.order_total', function(newValue, oldValue) {
 		// 這裡輸入觸發$watch之後，欲觸發的行為
@@ -175,6 +183,7 @@ var bodyCtrl = function($scope, $compile, $cookies, apiService, Websokect)
 					socket.emit('login', uid);
 				});
 				socket.on('update_data',$scope.update_data);
+				socket.on('uploadFixedQr',$scope.uploadFixedQr);
 			},
 			function() {
 				var obj ={

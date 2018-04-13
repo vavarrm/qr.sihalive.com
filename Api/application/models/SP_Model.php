@@ -35,5 +35,33 @@
 				throw $MyException;
 			}
 		}
+		
+		public function callRow($ary)
+		{
+			try
+			{
+				$sql =sprintf("CALL %s('%s')", $ary['sp'],join("','",$ary['parameter']));
+				$query = $this->db->query($sql);
+				$error = $this->db->error();
+				if($error['message'] !="")
+				{
+					$MyException = new MyException();
+					$array = array(
+						'el_system_error' 	=>$error['message'] ,
+						'status'	=>'000'
+					);
+					
+					$MyException->setParams($array);
+					throw $MyException;
+				}
+				$row  = $query->row_array();
+				$query->next_result(); 
+				return $row ;
+				
+			}catch(MyException $e)
+			{
+				
+			}
+		}
 	}
 ?>

@@ -1,12 +1,27 @@
-<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
-class MySocketIO
-{
-	private $CI ;
+<?php
+defined('BASEPATH') OR exit('No direct script access allowed');
+class PushSocket extends CI_Controller {
+	
+	
 	public function __construct() 
 	{
-		$this->CI =& get_instance();
+		parent::__construct();
+
 		try 
 		{
+			
+			$checkUser = $this->myfunc->checkUser($gitignore, $this->user_sess );
+			
+			if($checkUser !="200")
+			{
+				$array = array(
+					'status'	=>$checkUser
+				);
+				$MyException = new MyException();
+				$MyException->setParams($array);
+				throw $MyException;
+			}
+			
 			if(!empty($_SERVER['HTTP_CLIENT_IP'])){
 			   $myip = $_SERVER['HTTP_CLIENT_IP'];
 			}else if(!empty($_SERVER['HTTP_X_FORWARDED_FOR'])){
@@ -23,6 +38,8 @@ class MySocketIO
 				$MyException->setParams($array);
 				throw $MyException;
 			}
+			
+
 		}catch(MyException $e)
 		{
 			$parames = $e->getParams();
@@ -35,31 +52,22 @@ class MySocketIO
 			$this->myfunc->response($output);
 			exit;
 		}
-	}
-	
-	public function push($ary)
+    }
+
+	public function  fixedQr()
 	{
-		$default = array(
-			'type'	=>'publish'
-		);
-		
-		$get = array_merge($default, $ary);
-		
-		if(!empty($get))
-		{
-			foreach($get as $key=> $value)
-			{
-				$get_str.=sprintf("%s=%s&", $key, $value);
-			}
-		}
-		
-		$url = $_SERVER['SERVER_NAME'].":2121?".$get_str;
- 
+		echo $_SERVER['SERVER_NAME']; 
+		$url = "http://localhost/path.php?get_var=test";
+		 
 		$ch = curl_init();
+		 
 		curl_setopt($ch, CURLOPT_URL, $url);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 		$output = curl_exec($ch);
+		 
 		curl_close($ch);
-		return  $output;
+		 
+		echo $output;
 	}
+	
 }

@@ -85,16 +85,22 @@ class Api extends CI_Controller {
 				'max'		=>1,
 				'message'	=>$this->request['message']
 			);
-			$row = $this->delivery->insert($ary);
-			if($row['affected_rows'] == 0)
-			{
-				$array = array(
-					'status'	=>'012'
-				);
-				$MyException = new MyException();
-				$MyException->setParams($array);
-				throw $MyException;
-			}
+			// $row = $this->delivery->insert($ary);
+			// if($row['affected_rows'] == 0)
+			// {
+				// $array = array(
+					// 'status'	=>'012'
+				// );
+				// $MyException = new MyException();
+				// $MyException->setParams($array);
+				// throw $MyException;
+			// }
+			$output['message'] = $this->response_code['202']; 
+			$ary =array(
+				'action'	=>'uploadFixedQr',
+				'to'		=>'system'
+			);
+			$output['body']['socketPush'] = $this->socketIO->push($ary);
 		}catch(MyException $e)
 		{
 			$parames = $e->getParams();

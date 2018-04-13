@@ -53,7 +53,6 @@ var pageCtrl = function($scope ,$routeParams, apiService, $cookies, Websokect)
 			if(r.data.status =="200")
 			{
 				$scope.data.islogin = r.data.body.islogin;
-				console.log(r.data.body);
 				var socket = Websokect.open();
 				var uid = '001';
 				socket.on('connect', function(){
@@ -107,7 +106,12 @@ var pageCtrl = function($scope ,$routeParams, apiService, $cookies, Websokect)
 				if(r.data.status =="200")
 				{
 					$scope.data.response = r.data.body;
-					$scope.step = 4;
+					var obj ={
+						'message' :r.data.message
+					};
+					dialog(obj);
+					// $scope.step = 4;
+					
 				}else
 				{
 					var obj ={
