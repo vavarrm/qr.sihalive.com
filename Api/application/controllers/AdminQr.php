@@ -89,7 +89,9 @@ class AdminQr extends CI_Controller {
 			$ary = array(
 				'data'	=>$this->post['data'],
 				'filename'	=>$filename,
-				'title'	=>$this->post['title']
+				'title'	=>$this->post['title'],
+                'lat'	=>$this->post['lat'],
+                'lang'	=>$this->post['lang'],
 			);
 			$data  =  $this->qrcode->insert($ary );
 			
@@ -237,7 +239,9 @@ class AdminQr extends CI_Controller {
 				'id'				=>array('field'=>'t.id AS q_id','AS' =>'id'),
 				'data'				=>array('field'=>'t.data AS data','AS' =>'data'),
 				'title'		        =>array('field'=>'t.title	 AS title	','AS' =>'title'),
-				'image_name'		=>array('field'=>'CONCAT("/images/qrcode/",t.image_name)	 AS image_name	','AS' =>'QR' ,'type' =>"img","target"=>"_blank")
+				'image_name'		=>array('field'=>'CONCAT("/images/qrcode/",t.image_name)	 AS image_name	','AS' =>'QR' ,'type' =>"img","target"=>"_blank"),
+                'lat'               =>array('field'=>'t.lat AS lat','AS' =>'lat'),
+                'lang'               =>array('field'=>'t.lang AS lang','AS' =>'lang')
 			);
 			
 			$ary['subtotal'] = array(

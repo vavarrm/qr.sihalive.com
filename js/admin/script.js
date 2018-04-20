@@ -338,8 +338,6 @@ var MainController = function($scope, $routeParams, apiService, $templateCache, 
 					{
 						$scope.data.form_row.operation = r.data.body.row.operation;
 						var div ='<my-map  zoom="15" lat="'+$scope.data.form_row.r_lat+'" lng="'+$scope.data.form_row.r_lng+'"></my-map>';
-					
-						
 						$('.myGamp').append($compile(div)($scope));
 					}
 				}else
@@ -350,7 +348,6 @@ var MainController = function($scope, $routeParams, apiService, $templateCache, 
 					};
 					dialog(obj);
 				}
-				
 			},
 			function() {
 				var obj ={
@@ -360,9 +357,6 @@ var MainController = function($scope, $routeParams, apiService, $templateCache, 
 			}
 		)
 	}
-	
-
-	
 	$scope.addFormInit = function(initFunc)
 	{
 		var sess = $cookies.get('admin_sess');

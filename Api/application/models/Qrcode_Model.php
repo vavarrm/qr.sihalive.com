@@ -133,12 +133,15 @@
 				$sql ="	REPLACE INTO qrcode(
 							image_name,
 							data,
-							title
-						)VALUES(?,?,?)";
+							title,lat,lang
+						)VALUES(?,?,?,?,?)";
 				$bind =array(
 					$ary['filename'],
 					$ary['data'],
 					$ary['title'],
+                    $ary['lat'],
+                    $ary['lang'],
+
 				);
 				
 				$this->db->query($sql, $bind);
