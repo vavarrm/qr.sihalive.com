@@ -2,6 +2,14 @@
 <style>
 	.form-group {
 		padding: 0px!important;
+		width: 100%!important;
+	}
+	.form-control{
+		width: 100%!important;
+	}
+	#us3 {
+		width: 100%!important;
+		min-height:300px;border: 1px
 	}
 </style>
 <div class="row" ng-init="editFormInit('addForm')" >
@@ -16,77 +24,74 @@
 				<div class="clearfix"></div>
 			</div>
 			<div class="x_content" style="text-align: right!important;">
-					<form   action="{{data.form.action}}" method="post" class="form-horizontal " enctype="multipart/form-data">
-						<div class="form-group" >
-							<div class="col-sm-2">
-								<label> Data </label>
-							</div>
-							<div class="col-sm-10">
-
-								<input type="text" name="data"  required="required" class="form-control">
-							</div>
+				<form   action="{{data.form.action}}" method="post" class="form-horizontal " enctype="multipart/form-data">
+					<div class="form-group" >
+						<div class="col-sm-1">
+							<label> Data </label>
 						</div>
-						<div class="form-group" >
-							<div class="col-sm-2">
-								<label> Title</label>
-							</div>
-							<div class="col-sm-10">
-								<input type="text" name="title"  required="required" class="form-control ">
-							</div>
+						<div class="col-sm-10">
+							<input type="text" name="data"  required="required" class="form-control">
 						</div>
-						<div class="form-group" >
-							<label class="col-sm-2 " >level</label>
-							<div class="col-sm-2">
-								<select name="level" class="form-control col-md-7 col-xs-12">
-									<option value="L">L - smallest</option>
-									<option value="M">M</option>
-									<option value="Q">Q</option>
-									<option value="H">H</option>
-								</select>
-							</div>
+					</div>
+					<div class="form-group" >
+						<div class="col-sm-1">
+							<label> Title</label>
 						</div>
-						<div class="form-group">
-							<label class=" col-sm-2 " >size</label>
-							<div class="col-sm-6">
-								<select name="size" class="form-control col-md-7 col-xs-12">
-									<option value="1">1</option>
-									<option value="2">2</option>
-									<option value="3">3</option>
-									<option value="4">4</option>
-									<option value="5">5</option>
-									<option value="6">6</option>
-									<option value="7">7</option>
-									<option value="8">8</option>
-									<option value="9">9</option>
-									<option value="10">10</option>
-								</select>
-							</div>
+						<div class="col-sm-10">
+							<input type="text" name="title"  required="required" class="form-control ">
 						</div>
-						<div class="form-group " style="padding: 0px" >
-							<label  class="col-sm-2 "> Map </label>
-							<div class="col-sm-10">
-								<div id="us3" style="width:100%;min-height:300px;border: 1px solid silver"></div>
-							</div>
+					</div>
+					<div class="form-group" >
+						<label class="col-sm-1 " >level</label>
+						<div class="col-sm-2">
+							<select name="level" class="form-control col-md-7 col-xs-12">
+								<option value="L">L - smallest</option>
+								<option value="M">M</option>
+								<option value="Q">Q</option>
+								<option value="H">H</option>
+							</select>
 						</div>
-						<div class="form-group">
-							<label  class="col-sm-2 "> Map </label>
-							<div class="col-sm-2">
-								<div id="location" class="btn btn-danger" style="width: 150px; right: 10px" ><span class="glyphicon glyphicon-map-marker"></span>Your Location</div>
-							</div>
-							<div class="col-sm-2">
-								<input type="text" class="form-control" id="us3-lon" name="lang" required="required" />
-							</div>
-							<div class="col-sm-2">
-								<input type="text" class="form-control"  id="us3-lat" name="lat" required  />
-							</div>
+					</div>
+					<div class="form-group">
+						<label class=" col-sm-1 " >size</label>
+						<div class="col-sm-6">
+							<select name="size" class="form-control col-md-7 col-xs-12">
+								<option value="1">1</option>
+								<option value="2">2</option>
+								<option value="3">3</option>
+								<option value="4">4</option>
+								<option value="5">5</option>
+								<option value="6">6</option>
+								<option value="7">7</option>
+								<option value="8">8</option>
+								<option value="9">9</option>
+								<option value="10">10</option>
+							</select>
 						</div>
-						<div class="ln_solid"></div>
-						<div class="form-group">
-							<div class="col-sm-3">
-								<input type="submit" class="btn btn-success" value="Submit">
-							</div>
+					</div>
+					<div class="form-group" style="padding: 0px" >
+						<label  class="col-sm-1"> Map </label>
+						<div class="col-sm-11" id="us3"></div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-2">
+							<div id="location" class="btn btn-danger" style="right: 10px" ><span class="glyphicon glyphicon-map-marker"></span>Your Location</div>
 						</div>
-					</form>
+						<div class="col-sm-2" style="display: none">
+							<input type="text" class="form-control " id="us3-lon" name="lang"
+								   required="required" />
+						</div>
+						<div class="col-sm-2" style="display: none">
+							<input type="text" class="form-control "  id="us3-lat" name="lat" required  />
+						</div>
+					</div>
+					<div class="ln_solid"></div>
+					<div class="form-group">
+						<div class="col-sm-2">
+							<input type="submit" class="btn btn-success" value="Submit">
+						</div>
+					</div>
+				</form>
 			</div>
 	  </div>
 	</div>
