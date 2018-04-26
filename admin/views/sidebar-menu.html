@@ -11,11 +11,8 @@
 					<li ng-repeat="child in menu.child" ng-click="sidebar_menu_click(menu.pe_control,child);$event.stopPropagation();">
 						<a ng-bind="child.pe_name"></a>
 					</li>
-					<li ng-repeat="child in menu.child" ng-click="sidebar_menu_click(menu.pe_control,child);$event.stopPropagation();">
-						<a ng-bind="child.pe_name"></a>
-					</li>
-				</ul>
 
+				</ul>
 				<div ng-if="$last" ng-init="sidebarMenuListInit()"> </div>
 			</li>
 		</ul>
