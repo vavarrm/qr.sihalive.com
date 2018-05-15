@@ -15,7 +15,6 @@
 					'el_system_error' 	=>"set time_zone error" ,
 					'status'	=>'000'
 				);
-				
 				$MyException->setParams($array);
 				throw $MyException;
 			}
@@ -245,5 +244,42 @@
 				throw $e;
 			}
 		}
+        public function getList($ary)
+        {
+
+            try
+            {
+                if(empty($ary))
+                {
+                    $MyException = new MyException();
+                    $array = array(
+                        'el_system_error' 	=>'no setParams' ,
+                        'status'	=>'000'
+                    );
+                    $MyException->setParams($array);
+                    throw $MyException;
+                }
+                if(!empty($ary['fields']))
+                {
+                    foreach($ary['fields'] as $value)
+                    {
+                        $temp[] = $value['field'];
+                    }
+                }
+                $fields = join(',' ,$temp);
+
+                $sql ="	SELECT "
+                    . $fields.
+                    " FROM user_delivery AS t";
+
+                $ary['sql'] =$sql;
+                $output = $this->getListFromat($ary);
+
+                return 	$output  ;
+            }catch(MyException $e)
+            {
+                throw $e;
+            }
+        }
 	}
 ?>
