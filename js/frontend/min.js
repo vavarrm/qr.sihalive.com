@@ -35,8 +35,6 @@ pokerInsuranceApp.controller('LoginCtrl',  ['$scope' ,'$routeParams', 'apiServic
 var pageCtrl = function($scope ,$routeParams, apiService, $cookies, Websokect)
 {
 	
-	
-	
 	$scope.data =
 	{
 		input :{},
@@ -47,17 +45,34 @@ var pageCtrl = function($scope ,$routeParams, apiService, $cookies, Websokect)
 	var promise = apiService.Api('/Api/User/getUser');
 	promise.then
 	(
+		// 
 		function(r) 
 		{
-			
 			if(r.data.status =="200")
 			{
+				
 				$scope.data.islogin = r.data.body.islogin;
 				var socket = Websokect.open();
 				var uid = '001';
 				socket.on('connect', function(){
 					socket.emit('login', uid);
 				});
+				if( r.data.body.user_delivery  != null)
+				{
+					switch(r.data.body.user_delivery.status)
+					{
+					case "processing":
+						$scope.data.step=3;
+					  break;
+					case 2:
+					  break;
+					default:
+					}
+					if()
+					{
+						
+					}					
+				}
 				// socket.on('update_data',$scope.update_data);
 			}
 		},
@@ -189,7 +204,7 @@ var pageCtrl = function($scope ,$routeParams, apiService, $cookies, Websokect)
 					$scope.data.response = r.data.body
 					if($scope.data.response.isuse =='0')
 					{
-						$scope.data.step=3;
+						// $scope.data.step=3;
 					}
 					
 				}else

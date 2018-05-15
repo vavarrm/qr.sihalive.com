@@ -9,6 +9,7 @@ class User extends CI_Controller {
 		parent::__construct();	
 		
 		$this->load->model('User_Model', 'user');
+		$this->load->model('UserDelivery_Model', 'user_delivery');
 		
 		$this->request = json_decode(trim(file_get_contents('php://input'), 'r'), true);
 		$this->get = $this->input->get();
@@ -64,6 +65,8 @@ class User extends CI_Controller {
 			if(!empty($this->user_sess))
 			{
 				$output['body']['islogin']='1';
+				$user_delivery_row = $this->user_delivery->getDeliveryByNew($this->user_sess['id']);
+				$output['body']['user_delivery'] = $user_delivery_row;
 				$output['body']['token'] = $this->myfunc->getUserSess($this->user_sess);
 			}else
 			{

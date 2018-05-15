@@ -21,6 +21,50 @@
 			}
 		}
 
+		public function getDeliveryByNew($ary = array())
+		{
+			$status ='000';
+			try
+			{
+				if(empty($ary))
+				{
+					$MyException = new MyException();
+					$array = array(
+						'el_system_error' 	=>$error['message'] ,
+						'status'	=>$status
+					);
+					
+					$MyException->setParams($array);
+					throw $MyException;
+				}
+				$sql ="SELECT *  FROM user_delivery WHERE   status != 'end' AND user_id = ? ORDER BY add_datetime DESC LIMIT 1";
+				$bind= array(
+					$ary['id'],
+				);
+				
+				$query = $this->db->query($sql, $bind);
+				$error = $this->db->error();
+				if($error['message'] !="")
+				{
+					$MyException = new MyException();
+					$array = array(
+						'el_system_error' 	=>$error['message'] ,
+						'status'	=>$status
+					);
+					
+					$MyException->setParams($array);
+					throw $MyException;
+				}
+				$row = $query->row_array();
+				$query->free_result();
+				return $row;
+			}	
+			catch(MyException $e)
+			{
+				throw $e;
+			}
+		}
+		
 		public function getCountByStatus($st)
 		{
 			$status ='000';
