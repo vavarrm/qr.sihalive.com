@@ -23,7 +23,6 @@ class AdminUserDeliver extends CI_Controller
         $gitignore =array(
 
         );
-
         try
         {
             $checkAdmin = $this->myfunc->checkAdmin($gitignore);
@@ -49,8 +48,6 @@ class AdminUserDeliver extends CI_Controller
             exit;
         }
     }
-
-
     public function doEdit()
     {
         $output['body']=array();
@@ -97,64 +94,6 @@ class AdminUserDeliver extends CI_Controller
 
     }
 
-    public function addForm()
-    {
-        $output['body']=array();
-        $output['status'] = '200';
-        $output['title'] ='add Form';
-
-        try
-        {
-            $output['body']['row']['info'] = $data['row'];
-            $output['body']['row']['form'] = array(
-                'action'	=> '/Api/'.__CLASS__.'/doEdit',
-                'pe_id'		=>$this->get['pe_id']
-            );
-        }catch(MyException $e)
-        {
-            $parames = $e->getParams();
-            $parames['class'] = __CLASS__;
-            $parames['function'] = __function__;
-            $parames['message'] =  $this->response_code[$parames['status']];
-            $output['message'] = $parames['message'];
-            $output['status'] = $parames['status'];
-            $this->myLog->error_log($parames);
-        }
-
-        $this->myfunc->response($output);
-    }
-
-    public function delQr()
-    {
-        $output['body']=array();
-        $output['status'] = '200';
-        $output['title'] ='Qr  Del';
-        try
-        {
-
-            $id= (isset($this->request['id']))?$this->request['id']:'';
-            if($id=="")
-            {
-                $array = array(
-                    'status'	=>'002'
-                );
-                $MyException = new MyException();
-                $MyException->setParams($array);
-                throw $MyException;
-            }
-            $data = $this->delivery->del($id);
-        }catch(MyException $e)
-        {
-            $parames = $e->getParams();
-            $parames['class'] = __CLASS__;
-            $parames['function'] = __function__;
-            $parames['message'] =  $this->response_code[$parames['status']];
-            $output['message'] = $parames['message'];
-            $output['status'] = $parames['status'];
-            $this->myLog->error_log($parames);
-        }
-        $this->myfunc->response($output);
-    }
     public function getList($ary=array())
     {
         $output['body']=array();
@@ -183,7 +122,7 @@ class AdminUserDeliver extends CI_Controller
                 foreach($form['selectSearchControl'] as $key => $value)
                 {
                     $$key= (isset($this->request[$key]))?$this->request[$key]:'';
-                }  
+                }
             }
             $ary['order'] = (empty($this->request['order']))?array("t.id"=>'DESC'):$this->request['order'];
 
