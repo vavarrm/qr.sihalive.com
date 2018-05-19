@@ -57,20 +57,19 @@ var pageCtrl = function($scope ,$routeParams, apiService, $cookies, Websokect)
 				socket.on('connect', function(){
 					socket.emit('login', uid);
 				});
+				$scope.data.step = 1;
 				if( r.data.body.user_delivery  != null)
 				{
+					
 					switch(r.data.body.user_delivery.status)
 					{
 					case "processing":
 						$scope.data.step=3;
-					  break;
-					case 2:
-					  break;
+						break;
+					case "tuktukgo":
+						$scope.data.step=4;
+						break;
 					default:
-					}
-					if()
-					{
-						
 					}					
 				}
 				// socket.on('update_data',$scope.update_data);
