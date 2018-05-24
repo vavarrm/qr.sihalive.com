@@ -139,7 +139,7 @@
 								<td ng-if="data.form.table_del !==undefined || data.form.table_edit !==undefined || data.table_action_list.length >0">
 									<button ng-if="data.form.table_del !==undefined" type="button" ng-click="del(row.id)" class="btn btn-default btn-xs">del</button>
 									<button ng-if="data.form.table_edit !==undefined" type="button" ng-click="edit(row.id)" class="btn btn-default btn-xs">edit</button>
-									<a ng-if="data.table_action_list.length >0" ng-repeat="action in data.table_action_list" ng-bind="action.pe_name" href="/admin/views/tabpanel.html#!{{action.pe_control}}/{{action.pe_func}}/{{action.pe_page}}/{{data.tabindex}}/{{data.pe_id}}/{{row.id}}" class="btn btn-default btn-xs"> </a>
+									<a ng-if="data.table_action_list.length >0" ng-repeat="action in data.table_action_list" ng-bind="action.pe_name" ng-click="actionClick(action,row.id)" class="btn btn-default btn-xs"> </a>
 								</td>
 							</tr>
 						</tbody>

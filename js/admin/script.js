@@ -120,7 +120,6 @@ var bodyCtrl = function($scope, $compile, $cookies, apiService, Websokect)
 		data = (angular.fromJson(data));
 		$scope.$apply(function() {
 			$scope.socket_push_data.newfixedQr  = data;
-			console.log(data);
 		});
 	}
 
@@ -240,10 +239,19 @@ var MainController = function($scope, $routeParams, apiService, $templateCache, 
 	};
 	$scope.user_terminal = user_terminal;
 
+	$scope.actionClick = function(row,id)
+	{
+		// console.log(row);
+		var url ="/admin/views/form_panel.html#!/formEdit/"+row.pe_control+'/'+row.pe_func+'/'+row.pe_page+'/'+row.pe_id+'/'+id ;
+		// console.log(url);
+		
+		location.href=url;
+	}
+	
 	$scope.edit = function(id)
 	{
 		var url ="/admin/views/form_panel.html#!/formEdit/"+$scope.data.form.table_edit+id+'/'+$routeParams.pe_id ;
-		
+		// console.log(url);
 		location.href=url;
 	}
 	
@@ -319,6 +327,7 @@ var MainController = function($scope, $routeParams, apiService, $templateCache, 
 	
 	$scope.editFormInit = function(func)
 	{
+
 		var controller = $routeParams.controller;
 		var obj={
 			id : $routeParams.id
@@ -333,6 +342,8 @@ var MainController = function($scope, $routeParams, apiService, $templateCache, 
 					$scope.data.form_row = r.data.body.row.info;
 					var sess = $cookies.get('admin_sess');
 					$scope.data.form.action=r.data.body.row.form.action+"?sess="+sess+"&pe_id="+r.data.body.row.form.pe_id;
+					$scope.data.form.info  = r.data.body.row.info;
+					$scope.data.form.id = $routeParams.id;
 					// $scope.data.form.action="/"+controller+"/doEdit?sess="+sess+"&pe_id="+$routeParams.pe_id;
 					if(typeof r.data.body.row.operation !="undefined")
 					{
@@ -796,8 +807,9 @@ adminApp.config(function($routeProvider){
 		},
 		cache: false,
 		controller: 'MainController'
-    }).when("/formEdit/:controller/:func/:page/:id/:pe_id",{
+    }).when("/formEdit/:controller/:func/:page/:pe_id/:id",{
 		templateUrl: function(params) {
+			// console.log(params);
 			var page ='/admin/views/'+params.page+'.html?'+Math.random();
 			return page;
 		},

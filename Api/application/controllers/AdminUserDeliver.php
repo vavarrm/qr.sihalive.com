@@ -14,6 +14,7 @@ class AdminUserDeliver extends CI_Controller
     {
         parent::__construct();
         $this->load->model('UserDelivery_Model', 'delivery');
+		$this->load->model('TukTuk_Model', 'tuktuk');
         $this->load->library('session');
         $this->response_code = $this->language->load('admin_response');
         $this->request = json_decode(trim(file_get_contents('php://input'), 'r'), true);
@@ -35,6 +36,7 @@ class AdminUserDeliver extends CI_Controller
                 $MyException->setParams($array);
                 throw $MyException;
             }
+			$this->admin = $this->myfunc->getAdminUser( $this->get['sess']);
         }catch(MyException $e)
         {
             $parames = $e->getParams();
@@ -48,19 +50,48 @@ class AdminUserDeliver extends CI_Controller
             exit;
         }
     }
-    public function doEdit()
+	
+	public function setFormPage()
+	{
+		$output['body']=array();
+		$output['status'] = '200';
+		$output['title'] ='add Form';
+		
+		try 
+		{
+			$tuktukList = $this->tuktuk->getOnTukTukList();
+			$output['body']['row']['info'] = $tuktukList;
+			$output['body']['row']['form'] = array(
+				'action'	=> '/Api/'.__CLASS__.'/doSet',
+				'pe_id'		=>$this->get['pe_id']
+			);
+		}catch(MyException $e)
+		{
+			$parames = $e->getParams();
+			$parames['class'] = __CLASS__;
+			$parames['function'] = __function__;
+			$parames['message'] =  $this->response_code[$parames['status']]; 
+			$output['message'] = $parames['message']; 
+			$output['status'] = $parames['status']; 
+			$this->myLog->error_log($parames);
+		}
+		
+		$this->myfunc->response($output);
+	}
+	
+    public function doSet()
     {
         $output['body']=array();
         $output['status'] = '200';
         $output['status'] = '200';
-        $output['title'] ='qr generator';
-        $output['message'] ='generator ok';
+        $output['title'] ='Set Tuk Tuk';
+        $output['message'] ='Set Tuk Tuk';
         $back =-2;
         try
         {
             if(
-                empty($this->post['name']) ||
-                empty($this->post['phone'])
+                empty($this->post['tuktukid']) ||
+                empty($this->post['id']) 
             )
             {
                 $array = array(
@@ -70,15 +101,28 @@ class AdminUserDeliver extends CI_Controller
                 $MyException->setParams($array);
                 throw $MyException;
             }
-
-            $ary = array(
-                'name'	=>$this->post['name'],
-                'phone'	=>$this->post['phone'],
-                'password'	=>$this->post['pwd'],
-
-            );
-
-            $data  =  $this->delivery->insert($ary );
+			$row = $this->delivery->setTukTuk($this->post);
+			// if($row['affected_rows'] >0)
+			// {
+				$delivery =$this->delivery->getRowByID($this->post['id']);
+				$to = $delivery['user_id'];
+				$push_api_url  ="http://".$_SERVER['HTTP_HOST'].":2121/";
+				$post_data = array(
+				   "type" => "publish",
+				   "action"	=>"TukTukgo",
+				   "to" => $to,
+				   'content'	=>json_encode($delivery )
+				);
+				$ch = curl_init ();
+				curl_setopt ( $ch, CURLOPT_URL, $push_api_url );
+				curl_setopt ( $ch, CURLOPT_POST, 1 );
+				curl_setopt ( $ch, CURLOPT_HEADER, 0 );
+				curl_setopt ( $ch, CURLOPT_RETURNTRANSFER, 1 );
+				curl_setopt ( $ch, CURLOPT_POSTFIELDS, $post_data );
+				curl_setopt ($ch, CURLOPT_HTTPHEADER, array("Expect:"));
+				$return = curl_exec ( $ch );
+				curl_close ( $ch );
+			// }
 
         }catch(MyException $e)
         {
@@ -89,6 +133,7 @@ class AdminUserDeliver extends CI_Controller
             $output['message'] = $parames['message'];
             $output['status'] = $parames['status'];
             $this->myLog->error_log($parames);
+			
         }
         $this->myfunc->back($back,$output['message']);
 
@@ -114,9 +159,13 @@ class AdminUserDeliver extends CI_Controller
                 }
             }
 
-            $form['selectSearchControl'] = array(
-
-            );
+			$form['selectSearchControl'] = array(
+				'status'	=>array(
+					array('value' =>'processing' ,'text'=>'processing'),
+					array('value' =>'tuktukgo' ,'text'=>'tuktukgo'),
+					array('value' =>'end' ,'text'=>'end'),
+				)
+			);
             if(!empty($form['selectSearchControl']))
             {
                 foreach($form['selectSearchControl'] as $key => $value)
@@ -129,42 +178,32 @@ class AdminUserDeliver extends CI_Controller
             // $form['datetimeSearchControl'] = true;
 
             $form['table_add'] = __CLASS__."/add/".__CLASS__.'Add/';
-            $form['table_del'] = "delQr";
+            // $form['table_del'] = "delQr";
             // $form['table_edit'] =  __CLASS__."/editQr/".__CLASS__.'editQr/';
+			
+			
             $temp=array(
-                'pe_id' =>$this->pe_id,
+                'pe_id' =>$this->get['pe_id'],
                 'ad_id' =>$this->admin['ad_id'],
             );
             $action_list = $this->admin_user->getAdminListAction($temp);
 
-            $datetime_start = (isset($this->request['datetime_start']))?$this->request['datetime_start']:'';
-            $datetime_end = (isset($this->request['datetime_end']))?$this->request['datetime_end']:'';
-            if($datetime_start !="")
-            {
-                $datetime_start = date('Y-m-d H:i' ,strtotime($datetime_start));
-            }
 
-            if($datetime_end !="")
-            {
-                $datetime_end = date('Y-m-d H:i' ,strtotime($datetime_end));
-            }
-
-            $ary['datetime_start'] = array(
-                'value'	=>$datetime_start,
-                'operator'	=>'>=',
-            );
-            $ary['datetime_end'] = array(
-                'value'	=>$datetime_end,
-                'operator'	=>'<=',
-            );
             $ary['fields'] = array(
                 'id'				    =>array('field'=>'t.id AS id','AS' =>'id'),
-                'tuktuk_id'				=>array('field'=>'t.tuktuk_id AS tuktuk_id','AS' =>'tuktuk_id'),
                 'qrcode_id'		        =>array('field'=>'t.qrcode_id AS qrcode_id','AS' =>'qrcode_id'),
+                'status'		        =>array('field'=>'t.status AS status','AS' =>'status'),
 
             );
+			
+			$ary['t.status'] = array(
+				'value' =>$status,
+				'logic' =>'AND',
+				'operator' =>'=',
+			);
+			
             $list = $this->delivery->getList($ary);
-
+			
             $output['body'] = $list;
             $output['body']['fields'] = $ary['fields'] ;
             $output['body']['subtotal_fields'] = $ary['subtotal'] ;

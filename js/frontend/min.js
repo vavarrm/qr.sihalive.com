@@ -9,9 +9,6 @@ pokerInsuranceApp.config(function($routeProvider)
 			return 'views/'+params.page+'.html';
 		},
 		controller: 'pageCtrl'
-    }).when("/",
-	{
-		redirectTo:"/Api/register/register"
     }).when("/admin",
 	{
 		redirectTo:"/admin"
@@ -41,19 +38,19 @@ var pageCtrl = function($scope ,$routeParams, apiService, $cookies, Websokect)
 		urlParams:{},
 		response :{}
 	}
-	
+	var socket = Websokect.open();
 	var promise = apiService.Api('/Api/User/getUser');
 	promise.then
 	(
-		// 
 		function(r) 
 		{
+			
 			if(r.data.status =="200")
 			{
 				
 				$scope.data.islogin = r.data.body.islogin;
-				var socket = Websokect.open();
-				var uid = '001';
+
+				var uid = 'user'+r.data.body.uid;
 				socket.on('connect', function(){
 					socket.emit('login', uid);
 				});
@@ -63,16 +60,21 @@ var pageCtrl = function($scope ,$routeParams, apiService, $cookies, Websokect)
 					
 					switch(r.data.body.user_delivery.status)
 					{
-					case "processing":
-						$scope.data.step=3;
-						break;
-					case "tuktukgo":
-						$scope.data.step=4;
-						break;
-					default:
-					}					
+						case "processing":
+							$scope.data.step=4;
+							break;
+						case "tuktukgo":
+							$scope.data.step=5;
+							$scope.data.user_delivery =r.data.body.user_delivery ;
+							break;
+						default:
+					}			
+					return;
 				}
-				// socket.on('update_data',$scope.update_data);
+				if(r.data.body.islogin =="1")
+				{
+					$scope.data.step =3;
+				}
 			}
 		},
 		function() 
@@ -84,6 +86,15 @@ var pageCtrl = function($scope ,$routeParams, apiService, $cookies, Websokect)
 			dialog(obj);
 		}
 	)
+	
+	$scope.TukTukgo = function(r)
+	{
+		console.log(r);
+		$scope.$apply(function() {
+			$scope.data.step = 5;
+		});
+	}
+	socket.on('TukTukgo',$scope.TukTukgo);
 	
 	var strUrl = location.href;
 	var getPara, ParaVal;
@@ -124,7 +135,7 @@ var pageCtrl = function($scope ,$routeParams, apiService, $cookies, Websokect)
 						'message' :r.data.message
 					};
 					dialog(obj);
-					// $scope.step = 4;
+					$scope.data.step = 4;
 					
 				}else
 				{
@@ -422,7 +433,6 @@ pokerInsuranceApp.factory('Websokect', ['$q', '$rootScope', '$http', function($q
 	return {
 		open :function(){
 			var socket = {};
-			var uid ="001";
 			var host =location.protocol + '//' + location.host ;
 			socket = io(host+':2120', {secure: true});
 			return socket;

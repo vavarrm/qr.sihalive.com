@@ -157,6 +157,35 @@ class TukTuk_Model extends CI_Model{
         }
     }
 
+	
+	
+	public function getOnTukTukList()
+	{
+		try
+        {
+			$sql = "SELECT * FROM tuktuk";
+			$query = $this->db->query($sql, $bind);
+            $error = $this->db->error();
+            if($error['message'] !="")
+            {
+                $MyException = new MyException();
+                $array = array(
+                    'el_system_error' 	=>$error['message'] ,
+                    'status'	=>'000'
+                );
+
+                $MyException->setParams($array);
+                throw $MyException;
+            }
+			$output = $query->result_array();
+
+            return $output ;
+        }catch(MyException $e)
+        {
+            throw $e;
+        }
+	}
+	
     public function getList($ary)
     {
         try

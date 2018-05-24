@@ -241,7 +241,7 @@ class AdminQr extends CI_Controller {
 				'title'		        =>array('field'=>'t.title	 AS title	','AS' =>'title'),
 				'image_name'		=>array('field'=>'CONCAT("/images/qrcode/",t.image_name)	 AS image_name	','AS' =>'QR' ,'type' =>"img","target"=>"_blank"),
                 'lat'               =>array('field'=>'t.lat AS lat','AS' =>'lat'),
-                'lang'               =>array('field'=>'t.lang AS lang','AS' =>'lang')
+                'lang'               =>array('field'=>'t.lng AS lng','AS' =>'lng')
 			);
 			
 			$ary['subtotal'] = array(

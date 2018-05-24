@@ -68,6 +68,7 @@ $sender_io->on('connection', function($socket){
 
 // 当$sender_io启动后监听一个http端口，通过这个端口可以给任意uid或者所有uid推送数据
 $sender_io->on('workerStart', function(){
+
     // 监听一个http端口
     $inner_http_worker = new Worker('http://0.0.0.0:2121');
     // 当http客户端发来数据时触发
@@ -75,22 +76,20 @@ $sender_io->on('workerStart', function(){
         global $uidConnectionMap, $db;
         $_POST = $_POST ? $_POST : $_GET;
         // 推送数据的url格式 type=publish&to=uid&content=xxxx
+		echo "D";
         switch(@$_POST['type'])
 		{
             case 'publish':
                 global $sender_io;
                 $to = @$_POST['to'];
-                $content = htmlspecialchars(@$_POST['content']);
+                $content = json_decode($_POST['content']);
                 $action = htmlspecialchars(@$_POST['action']);
-				
 				switch($action)
 				{
-					case 'uploadFixedQr':
-						$row= $db->row("SELECT COUNT(*) AS value FROM user_delivery WHERE status='start'");
-						$content = $row;
+					case 'TukTukgo':
+						$to="user".$to;
 					break;
 				}
-				
 				$sender_io->to($to)->emit($action, json_encode($content));
                 if($to && !isset($uidConnectionMap[$to])){
                     return $http_connection->send('offline');

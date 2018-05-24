@@ -67,6 +67,7 @@ class User extends CI_Controller {
 				$output['body']['islogin']='1';
 				$user_delivery_row = $this->user_delivery->getDeliveryByNew($this->user_sess['id']);
 				$output['body']['user_delivery'] = $user_delivery_row;
+				$output['body']['uid'] =$this->user_sess['id'];
 				$output['body']['token'] = $this->myfunc->getUserSess($this->user_sess);
 			}else
 			{
