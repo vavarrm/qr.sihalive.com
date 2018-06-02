@@ -139,7 +139,6 @@ class CI_Model {
 							$bind[] = $value['value'];
 						}
 					}elseif($value['operator'] =='like'){
-							
 						$where .=sprintf(" %s %s LIKE ?", $value['logic'], $key, $value['operator']);							
 						$bind[] = "%".$value['value']."%";
 					}
@@ -153,6 +152,10 @@ class CI_Model {
 					}
 					else
 					{
+						if($value['logic'] =="")
+						{
+							$value['logic'] ="AND";
+						}
 						$where .=sprintf(" %s %s %s ?", $value['logic'], $key, $value['operator']);					
 						$bind[] = $value['value'];
 					}
@@ -174,6 +177,7 @@ class CI_Model {
 			$sql =$ary['sql'];
 			$search_sql = $sql.$where.$order.$limit ;
 			$query = $this->db->query($search_sql, $bind);
+
 			$error = $this->db->error();
 			if($error['message'] !="")
 			{
