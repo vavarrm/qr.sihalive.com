@@ -2,7 +2,14 @@
 var pokerInsuranceApp = angular.module("pokerInsuranceApp", ['ngRoute', 'ngCookies']);
 pokerInsuranceApp.config(function($routeProvider)
 {
-	$routeProvider.when("/:controller/:func/:page",
+	$routeProvider.when("/:controller/:func",
+	{
+		templateUrl: function(params) 
+		{
+			return 'views/'+params.controller+params.func+'.html';
+		},
+		controller: 'pageCtrl'
+    }).when("/:controller/:func/:page",
 	{
 		templateUrl: function(params) 
 		{
@@ -38,63 +45,126 @@ var pageCtrl = function($scope ,$routeParams, apiService, $cookies, Websokect)
 		urlParams:{},
 		response :{}
 	}
+	
 	var socket = Websokect.open();
-	var promise = apiService.Api('/Api/User/getUser');
-	promise.then
-	(
-		function(r) 
-		{
-			
-			if(r.data.status =="200")
+	
+	$scope.tuktukShowMap = function ()
+	{
+		$( "#users-contain" ).dialog({
+			height: 400,
+			width: 350,
+			modal: true
+		});
+		// dialog.dialog( "open" );
+	}
+	
+	$scope.tuktukinit = function ()
+	{
+		var promise = apiService.Api('/Api/TukTuk/getUser');
+		promise.then
+		(
+			function(r) 
 			{
-				
-				$scope.data.islogin = r.data.body.islogin;
-
-				var uid = 'user'+r.data.body.uid;
-				socket.on('connect', function(){
-					socket.emit('login', uid);
-				});
-				$scope.data.step = 1;
-				if( r.data.body.user_delivery  != null)
+			console.log(r);
+				if(r.data.status =="200")
 				{
 					
-					switch(r.data.body.user_delivery.status)
-					{
-						case "processing":
-							$scope.data.step=4;
-							break;
-						case "tuktukgo":
-							$scope.data.step=5;
-							$scope.data.user_delivery =r.data.body.user_delivery ;
-							break;
-						default:
-					}			
-					return;
+					
+					var tuktukid = 'tuktuk'+r.data.body.tuktukid;
+					$scope.data.order = r.data.body.order
+					socket.on('connect', function(){
+						socket.emit('login', tuktukid);
+					});
+					callRute();
 				}
-				if(r.data.body.islogin =="1")
-				{
-					$scope.data.step =3;
-				}
+			},
+			function() 
+			{
+				
+				var obj ={
+					'message' :'system error'
+				};
+				dialog(obj);
 			}
-		},
-		function() 
-		{
-			
-			var obj ={
-				'message' :'system error'
-			};
-			dialog(obj);
-		}
-	)
+		)
+	}
+	
+	$scope.userinit = function ()
+	{
+		var promise = apiService.Api('/Api/User/getUser');
+		promise.then
+		(
+			function(r) 
+			{
+				
+				if(r.data.status =="200")
+				{
+					
+					$scope.data.islogin = r.data.body.islogin;
+
+					var uid = 'user'+r.data.body.uid;
+					socket.on('connect', function(){
+						socket.emit('login', uid);
+					});
+					$scope.data.step = 1;
+					if( r.data.body.user_delivery  != null)
+					{
+						
+						switch(r.data.body.user_delivery.status)
+						{
+							case "processing":
+								$scope.data.step=4;
+								break;
+							case "tuktukgo":
+								$scope.data.step=5;
+								$scope.data.user_delivery =r.data.body.user_delivery ;
+								break;
+							default:
+						}			
+						return;
+					}
+					if(r.data.body.islogin =="1")
+					{
+						$scope.data.step =3;
+					}
+				}
+			},
+			function() 
+			{
+				
+				var obj ={
+					'message' :'system error'
+				};
+				dialog(obj);
+			}
+		)
+	}
 	
 	$scope.TukTukgo = function(r)
 	{
-		console.log(r);
+		r= JSON.parse(r);
 		$scope.$apply(function() {
 			$scope.data.step = 5;
+			$scope.data.user_delivery.phone= r.phone;
+			$scope.data.user_delivery.tuktuk_id= r.tuktuk_id;
+			
 		});
 	}
 	socket.on('TukTukgo',$scope.TukTukgo);
+	
+	$scope.CallTukTukPush = function(r)
+	{
+		r= JSON.parse(r);
+		console.log(r);
+		// $scope.$apply(function() {
+			// $scope.data.step = 5;
+			// $scope.data.user_delivery.phone= r.phone;
+			// $scope.data.user_delivery.tuktuk_id= r.tuktuk_id;
+			
+		// });
+	}
+	socket.on('CallTukTukPush',$scope.CallTukTukPush);
+
 	
 	var strUrl = location.href;
 	var getPara, ParaVal;
@@ -147,6 +217,60 @@ var pageCtrl = function($scope ,$routeParams, apiService, $cookies, Websokect)
 				
 			},
 			function() {
+				$scope.ajaxload = false;
+				var obj ={
+					'message' :'system error'
+				};
+				dialog(obj);
+			}
+		)
+	}
+	
+	$scope.tuktuklogin = function()
+	{
+		if($scope.ajaxload == true)
+		{
+			var obj =
+			{
+				'message' :'loading.....',
+			};
+			dialog(obj);
+			return false;
+		}
+		$scope.ajaxload = true;	
+		var promise = apiService.Api('/Api/'+$routeParams.controller+'/'+$routeParams.func, $scope.data.input);
+		promise.then
+		(
+			function(r) 
+			{
+				$scope.ajaxload = false;
+				if(r.data.status =="200")
+				{
+					$scope.data.islogin = r.data.body.islogin;
+					var obj ={
+						'message' :r.data.message,
+						buttons: [
+							{
+								text: "close",
+								click: function() {
+									$( this ).dialog( "close" );
+									location.href="/#!/TukTuk/index"
+								}
+							}
+						]
+					};
+					dialog(obj);
+				}else
+				{
+					var obj ={
+					'message' :r.data.message
+					};
+					dialog(obj);
+				}
+				
+			},
+			function() 
+			{
 				$scope.ajaxload = false;
 				var obj ={
 					'message' :'system error'

@@ -8,6 +8,17 @@ class MyFunc
 		$this->CI->load->model('AdminUser_Model', 'admin_user');
 	}
 	
+	public function parsePhoneNumbrer($number)
+	{
+		$phoneNumberOne = substr($number ,0,1 );
+		if($phoneNumberOne==0)
+		{
+			$number= substr($number ,1,8 );
+		}
+		$phoneNumber = "855".$number;
+		return $phoneNumber;
+	}
+	
 	public function getIP()
 	{
 		if(!empty($_SERVER["HTTP_CLIENT_IP"])){

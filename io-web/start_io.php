@@ -76,7 +76,6 @@ $sender_io->on('workerStart', function(){
         global $uidConnectionMap, $db;
         $_POST = $_POST ? $_POST : $_GET;
         // 推送数据的url格式 type=publish&to=uid&content=xxxx
-		echo "D";
         switch(@$_POST['type'])
 		{
             case 'publish':
@@ -84,10 +83,14 @@ $sender_io->on('workerStart', function(){
                 $to = @$_POST['to'];
                 $content = json_decode($_POST['content']);
                 $action = htmlspecialchars(@$_POST['action']);
+				echo    $action ;
 				switch($action)
 				{
 					case 'TukTukgo':
 						$to="user".$to;
+					break;
+					case 'CallTukTukPush':
+						$to="tuktuk".$to;
 					break;
 				}
 				$sender_io->to($to)->emit($action, json_encode($content));

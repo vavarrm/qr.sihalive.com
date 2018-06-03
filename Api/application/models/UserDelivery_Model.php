@@ -20,6 +20,50 @@
 			}
 		}
 
+		public function getTukTukOrder($id)
+		{
+			$status ='000';
+			try
+			{
+				$sql ="	SELECT 
+							ud.*,
+							qr.lat,
+							qr.lng,
+							u.phone
+						FROM 
+							user_delivery AS ud  
+								INNER JOIN qrcode AS qr ON ud.qrcode_id = qr.id
+								INNER JOIN user AS u ON u.id = ud.user_id
+						WHERE  ud.tuktuk_id=? 
+						AND ud.status ='calltuktuk'
+						ORDER BY ud.`add_datetime` DESC LIMIT 1";
+				$bind= array(
+					$id
+				);
+				
+				$query = $this->db->query($sql, $bind);
+				$error = $this->db->error();
+				if($error['message'] !="")
+				{
+					$MyException = new MyException();
+					$array = array(
+						'el_system_error' 	=>$error['message'] ,
+						'status'	=>$status
+					);
+					
+					$MyException->setParams($array);
+					throw $MyException;
+				}
+				$row = $query->row_array();
+				$query->free_result();
+				return $row;
+			}	
+			catch(MyException $e)
+			{
+				throw $e;
+			}
+		}
+		
 		public function getRowByID($id)
 		{
 			$status ='000';
@@ -64,7 +108,7 @@
 			$output = array();
 			try
 			{
-				$sql =" UPDATE `user_delivery` SET `tuktuk_id` = ? , `status` = 'tuktukgo' WHERE `user_delivery`.`id` = ?";
+				$sql =" UPDATE `user_delivery` SET `tuktuk_id` = ? , `status` = 'calltuktuk' WHERE `user_delivery`.`id` = ?";
 				$bind =array(
 					$ary['tuktukid'],
 					$ary['id'],
@@ -213,15 +257,14 @@
 			}
 		}
 		
-		public function insert($ary)
+		public function getTicketById($id)
 		{
-			$status='000';
+			$status ='000';
 			try
 			{
-				$sql ="SELECT COUNT(*) AS c FROM user_delivery WHERE status='end'";
+				$sql ="SELECT ticket FROM user WHERE id =?";
 				$bind= array(
-					$ary['qrcode_id'],
-					$ary['user_id']
+					$id
 				);
 				
 				$query = $this->db->query($sql, $bind);
@@ -239,8 +282,176 @@
 				}
 				$row = $query->row_array();
 				$query->free_result();
+				return $row;
+			}	
+			catch(MyException $e)
+			{
+				throw $e;
+			}
+		}
+		
+		public function confirm($ary)
+		{
+			$status ='000';
+			try
+			{
+				if(empty($ary))
+				{
+					$MyException = new MyException();
+					$array = array(
+						'el_system_error' 	=>$error['message'] ,
+						'status'	=>$status
+					);
+					
+					$MyException->setParams($array);
+					throw $MyException;
+				}
 				
-				if($row['c'] >= $ary['max'])
+				$sql ="SELECT status FROM user_delivery WHERE  id=? ";
+				$bind= array(
+					$ary['id']
+				);
+				
+				$query = $this->db->query($sql, $bind);
+				$error = $this->db->error();
+				if($error['message'] !="")
+				{
+					$MyException = new MyException();
+					$array = array(
+						'el_system_error' 	=>$error['message'] ,
+						'status'	=>$status
+					);
+					
+					$MyException->setParams($array);
+					throw $MyException;
+				}
+				$row = $query->row_array();
+				$query->free_result();
+				$sql ="UPDATE user_delivery SET status =? WHERE id = ?";
+				if($row['status'] =='complete' && $ary['status'] == 'complete')
+				{
+					$status ='007';
+					$MyException = new MyException();
+					$array = array(
+						'el_system_error' 	=>$error['message'] ,
+						'status'	=>$status
+					);
+					
+					$MyException->setParams($array);
+					throw $MyException;
+				}
+				
+				if($row['status'] =='complete' && $ary['status'] == 'cancel')
+				{
+					$status ='008';
+					$MyException = new MyException();
+					$array = array(
+						'el_system_error' 	=>$error['message'] ,
+						'status'	=>$status
+					);
+					
+					$MyException->setParams($array);
+					throw $MyException;
+
+				}
+				
+				if($row['status'] !='tuktukarrival' && $ary['status'] == 'complete')
+				{
+					$status ='006';
+					$MyException = new MyException();
+					$array = array(
+						'el_system_error' 	=>$error['message'] ,
+						'status'	=>$status
+					);
+					
+					$MyException->setParams($array);
+					throw $MyException;
+				}
+				
+			
+				
+				if($ary['status'] == 'complete')
+				{
+					$sql ="UPDATE user_delivery SET status =? WHERE id = ?";
+					$bind = array(
+						$ary['status'],
+						$ary['id'],
+					);
+					$query = $this->db->query($sql, $bind);
+					$error = $this->db->error();
+					if($error['message'] !="")
+					{
+						$MyException = new MyException();
+						$array = array(
+							'el_system_error' 	=>$error['message'] ,
+							'status'	=>$status
+						);
+						
+						$MyException->setParams($array);
+						throw $MyException;
+					}
+					$affected_rows = $this->db->affected_rows();
+					$output['affected_rows']  = $affected_rows;
+					
+					$sql ="UPDATE user SET ticket = ticket-1 WHERE id =?";
+					$bind = array(
+						$row['user_id'],
+					);
+					$query = $this->db->query($sql, $bind);
+					$error = $this->db->error();
+					if($error['message'] !="")
+					{
+						$MyException = new MyException();
+						$array = array(
+							'el_system_error' 	=>$error['message'] ,
+							'status'	=>$status
+						);
+						
+						$MyException->setParams($array);
+						throw $MyException;
+					}
+					
+					
+				}elseif($ary['status'] == 'cancel')
+				{
+					
+					$sql ="UPDATE user_delivery SET status =? ,tuktuk_id =NULL WHERE id = ?";
+					$bind = array(
+						$ary['status'],
+						$ary['id'],
+					);
+					$query = $this->db->query($sql, $bind);
+					$error = $this->db->error();
+					if($error['message'] !="")
+					{
+						$MyException = new MyException();
+						$array = array(
+							'el_system_error' 	=>$error['message'] ,
+							'status'	=>$status
+						);
+						
+						$MyException->setParams($array);
+						throw $MyException;
+					}
+					$affected_rows = $this->db->affected_rows();
+					$output['affected_rows']  = $affected_rows;
+				}
+				
+				
+			}	
+			catch(MyException $e)
+			{
+				throw $e;
+			}
+		}
+		
+		public function insert($ary)
+		{
+			$status='000';
+			try
+			{
+				$Ticket = $this->getTicketById($ary['user_id']);
+				if($Ticket['ticket'] <=0)
 				{
 					$status ='013';
 					$MyException = new MyException();
@@ -353,7 +564,9 @@
 
                 $sql ="	SELECT "
                     . $fields.
-                    " FROM user_delivery AS t";
+                    " FROM user_delivery AS t 
+						LEFT JOIN tuktuk AS tk ON t.tuktuk_id = tk.id
+						INNER JOIN user AS u ON u.id = t.user_id";
 
                 $ary['sql'] =$sql;
                 $output = $this->getListFromat($ary);

@@ -20,6 +20,42 @@ class TukTuk_Model extends CI_Model{
         }
     }
 
+	public function getRowByPhone($phone)
+	{
+		try
+        {
+            $bind = array(
+               $phone
+            );
+
+            $sql = "SELECT * FROM tuktuk WHERE phone =?";
+            $query = $this->db->query($sql, $bind);
+            $error = $this->db->error();
+            if($error['message'] !="")
+            {
+                $MyException = new MyException();
+                $array = array(
+                    'el_system_error' 	=>$error['message'] ,
+                    'status'	=>'000'
+                );
+
+                $MyException->setParams($array);
+                throw $MyException;
+            }
+
+            $row = $query->row_array();
+            $query->free_result();
+
+
+            return $row ;
+        }
+        catch(MyException $e)
+        {
+            $this->db->trans_rollback();
+            throw $e;
+        }
+	}
+	
     public function getRow($id)
     {
         try
@@ -163,7 +199,7 @@ class TukTuk_Model extends CI_Model{
 	{
 		try
         {
-			$sql = "SELECT * FROM tuktuk";
+			$sql = "SELECT t.* FROM tuktuk  AS t   WHERE t.id NOT IN(SELECT tuktuk_id FROM user_delivery WHERE status IN('tuktukgo','tuktukarrival','tuktukback','calltuktuk'))";
 			$query = $this->db->query($sql, $bind);
             $error = $this->db->error();
             if($error['message'] !="")

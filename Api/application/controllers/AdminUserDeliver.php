@@ -15,7 +15,6 @@ class AdminUserDeliver extends CI_Controller
         parent::__construct();
         $this->load->model('UserDelivery_Model', 'delivery');
 		$this->load->model('TukTuk_Model', 'tuktuk');
-        $this->load->library('session');
         $this->response_code = $this->language->load('admin_response');
         $this->request = json_decode(trim(file_get_contents('php://input'), 'r'), true);
         $this->get = $this->input->get();
@@ -51,6 +50,73 @@ class AdminUserDeliver extends CI_Controller
         }
     }
 	
+	public function setConfirmFormPage()
+	{
+		$output['body']=array();
+		$output['status'] = '200';
+		$output['title'] ='set Confirm Form';
+		
+		try 
+		{
+			$tuktukList = $this->tuktuk->getOnTukTukList();
+			$output['body']['row']['info'] = $tuktukList;
+			$output['body']['row']['form'] = array(
+				'action'	=> '/Api/'.__CLASS__.'/doConfirm',
+				'pe_id'		=>$this->get['pe_id']
+			);
+		}catch(MyException $e)
+		{
+			$parames = $e->getParams();
+			$parames['class'] = __CLASS__;
+			$parames['function'] = __function__;
+			$parames['message'] =  $this->response_code[$parames['status']]; 
+			$output['message'] = $parames['message']; 
+			$output['status'] = $parames['status']; 
+			$this->myLog->error_log($parames);
+		}
+		
+		$this->myfunc->response($output);
+	}
+	
+	public function doConfirm()
+	{
+		$output['body']=array();
+        $output['status'] = '200';
+        $output['status'] = '200';
+        $output['title'] ='Set Tuk Tuk';
+        $output['message'] ='Set Confirm';
+        $back =-2;
+        try
+        {
+            if(
+                empty($this->post['id']) ||
+                empty($this->post['status']) 
+            )
+            {
+                $array = array(
+                    'status'	=>'002'
+                );
+                $MyException = new MyException();
+                $MyException->setParams($array);
+                throw $MyException;
+            }
+			$row = $this->delivery->confirm($this->post);
+
+        }catch(MyException $e)
+        {
+            $parames = $e->getParams();
+            $parames['class'] = __CLASS__;
+            $parames['function'] = __function__;
+            $parames['message'] =  $this->response_code[$parames['status']];
+            $output['message'] = $parames['message'];
+            $output['status'] = $parames['status'];
+            $this->myLog->error_log($parames);
+			
+        }
+        $this->myfunc->back($back,$output['message']);
+
+	}
+	
 	public function setFormPage()
 	{
 		$output['body']=array();
@@ -85,7 +151,7 @@ class AdminUserDeliver extends CI_Controller
         $output['status'] = '200';
         $output['status'] = '200';
         $output['title'] ='Set Tuk Tuk';
-        $output['message'] ='Set Tuk Tuk';
+        $output['message'] ='Call tuk tuk';
         $back =-2;
         try
         {
@@ -102,14 +168,14 @@ class AdminUserDeliver extends CI_Controller
                 throw $MyException;
             }
 			$row = $this->delivery->setTukTuk($this->post);
-			// if($row['affected_rows'] >0)
-			// {
+			if($row['affected_rows'] >0)
+			{
 				$delivery =$this->delivery->getRowByID($this->post['id']);
-				$to = $delivery['user_id'];
+				$to = $delivery['tuktuk_id'];
 				$push_api_url  ="http://".$_SERVER['HTTP_HOST'].":2121/";
 				$post_data = array(
 				   "type" => "publish",
-				   "action"	=>"TukTukgo",
+				   "action"	=>"CallTukTukPush",
 				   "to" => $to,
 				   'content'	=>json_encode($delivery )
 				);
@@ -122,7 +188,8 @@ class AdminUserDeliver extends CI_Controller
 				curl_setopt ($ch, CURLOPT_HTTPHEADER, array("Expect:"));
 				$return = curl_exec ( $ch );
 				curl_close ( $ch );
-			// }
+				echo $return ;
+			}
 
         }catch(MyException $e)
         {
@@ -163,7 +230,10 @@ class AdminUserDeliver extends CI_Controller
 				'status'	=>array(
 					array('value' =>'processing' ,'text'=>'processing'),
 					array('value' =>'tuktukgo' ,'text'=>'tuktukgo'),
-					array('value' =>'end' ,'text'=>'end'),
+					array('value' =>'complete' ,'text'=>'complete'),
+					array('value' =>'cancel' ,'text'=>'cancel'),
+					array('value' =>'tuktukarrival' ,'text'=>'tuktukarrival'),
+					array('value' =>'tuktukback' ,'text'=>'tuktukback'),
 				)
 			);
             if(!empty($form['selectSearchControl']))
@@ -177,7 +247,7 @@ class AdminUserDeliver extends CI_Controller
 
             // $form['datetimeSearchControl'] = true;
 
-            $form['table_add'] = __CLASS__."/add/".__CLASS__.'Add/';
+            // $form['table_add'] = __CLASS__."/add/".__CLASS__.'Add/';
             // $form['table_del'] = "delQr";
             // $form['table_edit'] =  __CLASS__."/editQr/".__CLASS__.'editQr/';
 			
@@ -193,6 +263,8 @@ class AdminUserDeliver extends CI_Controller
                 'id'				    =>array('field'=>'t.id AS id','AS' =>'id'),
                 'qrcode_id'		        =>array('field'=>'t.qrcode_id AS qrcode_id','AS' =>'qrcode_id'),
                 'status'		        =>array('field'=>'t.status AS status','AS' =>'status'),
+                'tuktuk_phone'		        =>array('field'=>'tk.phone AS tuktuk_phone','AS' =>'tuktuk_phone'),
+                'user_phone'		        =>array('field'=>'u.phone AS user_phone','AS' =>'user_phone'),
 
             );
 			

@@ -1,0 +1,34 @@
+<div class="row" ng-init="editFormInit('setConfirmFormPage')">
+	<div class="col-md-12 col-sm-12 col-xs-12">
+		<div class="x_panel">
+			<div class="x_title">
+				<h2>set Driver Finsh</h2>
+				<ul class="nav navbar-right panel_toolbox">
+					<li><a class="collapse-link" ng-click="back();"><i class="fa fa-arrow-left"></i></a></li>
+					<li><a class="close-link" ng-click="tableClose();"><i class="fa fa-close"></i></a></li>
+				</ul>
+				<div class="clearfix"></div>
+			</div>
+			<div class="x_content">
+				<br>
+				<form   action="{{data.form.action}}" method="post" class="form-horizontal form-label-left" >
+					<input name="id" type="hidden" value="{{data.form.id}}"> 
+					<div class="form-group ">
+						<div class="col-md-2 ">
+							<label for="sel1">Select list:</label>
+							<select name="status" class="form-control" id="sel1">
+								<option value="complete">complete</option>
+								<option value="cancel">cancel</option>
+							</select>
+						</div>
+					</div>
+					<div class="form-group ">
+						<div class="col-md-6">
+							<input type="submit" class="btn btn-success" value="Submit">
+						</div>
+					</div>
+				</form>
+			</div>
+	  </div>
+	</div>
+</div>
