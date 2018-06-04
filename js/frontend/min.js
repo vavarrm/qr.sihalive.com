@@ -43,9 +43,10 @@ var pageCtrl = function($scope ,$routeParams, apiService, $cookies, Websokect)
 	{
 		input :{},
 		urlParams:{},
-		response :{}
+		response :{},
+		user_delivery:{}
 	}
-	
+
 	var socket = Websokect.open();
 	
 	$scope.tuktukShowMap = function ()
@@ -65,7 +66,7 @@ var pageCtrl = function($scope ,$routeParams, apiService, $cookies, Websokect)
 		(
 			function(r) 
 			{
-			console.log(r);
+			
 				if(r.data.status =="200")
 				{
 					
@@ -76,6 +77,7 @@ var pageCtrl = function($scope ,$routeParams, apiService, $cookies, Websokect)
 						socket.emit('login', tuktukid);
 					});
 					callRute();
+					callRute2();
 				}
 			},
 			function() 
@@ -101,19 +103,27 @@ var pageCtrl = function($scope ,$routeParams, apiService, $cookies, Websokect)
 				{
 					
 					$scope.data.islogin = r.data.body.islogin;
-
+					
 					var uid = 'user'+r.data.body.uid;
 					socket.on('connect', function(){
 						socket.emit('login', uid);
 					});
 					$scope.data.step = 1;
+					// console.log(r.data.body.user_delivery);
 					if( r.data.body.user_delivery  != null)
 					{
 						
+						
 						switch(r.data.body.user_delivery.status)
 						{
+							case "calltuktuk":
+								$scope.data.step=4;
+								break;
 							case "processing":
 								$scope.data.step=4;
+								break;
+							case "cancel" :
+								$scope.data.step=3;
 								break;
 							case "tuktukgo":
 								$scope.data.step=5;
@@ -122,10 +132,21 @@ var pageCtrl = function($scope ,$routeParams, apiService, $cookies, Websokect)
 							default:
 						}			
 						return;
-					}
-					if(r.data.body.islogin =="1")
+					}else if(r.data.body.islogin ==1)
 					{
-						$scope.data.step =3;
+						if(r.data.body.user_status =="registered")
+						{
+							$scope.data.input.phone = r.data.body.user_phone;
+							$scope.data.input.vid = r.data.body.verifycode.id;
+							$scope.data.step =2;
+						}
+						else if(r.data.body.user_ticket >0)
+						{
+							$scope.data.step =3;
+						}else
+						{
+							$scope.data.step =6;
+						}
 					}
 				}
 			},
@@ -140,8 +161,9 @@ var pageCtrl = function($scope ,$routeParams, apiService, $cookies, Websokect)
 		)
 	}
 	
-	$scope.TukTukgo = function(r)
+	$scope.CallUserTukTukGo = function(r)
 	{
+		
 		r= JSON.parse(r);
 		$scope.$apply(function() {
 			$scope.data.step = 5;
@@ -150,12 +172,12 @@ var pageCtrl = function($scope ,$routeParams, apiService, $cookies, Websokect)
 			
 		});
 	}
-	socket.on('TukTukgo',$scope.TukTukgo);
+	socket.on('CallUserTukTukGo',$scope.CallUserTukTukGo);
 	
 	$scope.CallTukTukPush = function(r)
 	{
 		r= JSON.parse(r);
-		console.log(r);
+		// console.log(r);
 		// $scope.$apply(function() {
 			// $scope.data.step = 5;
 			// $scope.data.user_delivery.phone= r.phone;
@@ -165,6 +187,17 @@ var pageCtrl = function($scope ,$routeParams, apiService, $cookies, Websokect)
 	}
 	socket.on('CallTukTukPush',$scope.CallTukTukPush);
 
+	$scope.CallUserCancel = function(r)
+	{
+		
+		$scope.$apply(function() {
+			$scope.data.step = 4;
+			// $scope.data.user_delivery.phone= r.phone;
+			// $scope.data.user_delivery.tuktuk_id= r.tuktuk_id;
+			
+		});
+	}
+	socket.on('CallUserCancel',$scope.CallUserCancel);
 	
 	var strUrl = location.href;
 	var getPara, ParaVal;
@@ -301,8 +334,22 @@ var pageCtrl = function($scope ,$routeParams, apiService, $cookies, Websokect)
 				if(r.data.status =="200")
 				{
 					$scope.data.islogin = r.data.body.islogin;
-					var obj ={
-						'message' :r.data.message
+					// var obj ={
+						// 'message' :r.data.message
+					// };
+					var obj =
+					{
+						'message' :'login ok',
+						buttons: [
+							{
+								text: "close",
+								click: function() {
+									// location.href="/admin/login.html"
+									history.go(-1);
+									$( this ).dialog( "close" );
+								}
+							}
+						]
 					};
 					dialog(obj);
 				}else
@@ -399,6 +446,7 @@ var pageCtrl = function($scope ,$routeParams, apiService, $cookies, Websokect)
 					$scope.data.resenddisabled = true;
 					$scope.data.vid = r.data.body.id;
 					$scope.starttimer();
+
 					var obj ={
 						'message' :r.data.message
 					};
@@ -448,7 +496,7 @@ var pageCtrl = function($scope ,$routeParams, apiService, $cookies, Websokect)
 				}else
 				{
 					var obj ={
-					'message' :r.data.message
+						'message' :r.data.message
 					};
 					dialog(obj);
 				}

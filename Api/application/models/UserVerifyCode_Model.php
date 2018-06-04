@@ -22,6 +22,46 @@
 		}
 		
 		
+		public function getNoUsedVerifyCodeByUserId($user_id)
+		{
+			$status ='000';
+			try
+			{
+				$sql ="	SELECT 
+							*
+						FROM 
+							 user_verifycode  
+						WHERE  user_id=?  AND used = '0'
+						ORDER BY add_datetime DESC
+						LIMIT 1";
+				$bind= array(
+					$user_id
+				);
+				
+				$query = $this->db->query($sql, $bind);
+				// echo $this->db->last_query();
+				$error = $this->db->error();
+				if($error['message'] !="")
+				{
+					$MyException = new MyException();
+					$array = array(
+						'el_system_error' 	=>$error['message'] ,
+						'status'	=>$status
+					);
+					
+					$MyException->setParams($array);
+					throw $MyException;
+				}
+				$row = $query->row_array();
+				$query->free_result();
+				return $row;
+			}	
+			catch(MyException $e)
+			{
+				throw $e;
+			}	
+		}
+		
 		public function insert($ary)
 		{
 			$status ='000';
@@ -211,13 +251,14 @@
 					FROM 
 						`user_verifycode`
 					WHERE 
-						phone = ?  
+						phone = ?  AND  used = '0'
 					 ";
 				$bind= array(
 					$ary['phone']
 				);
 				
 				$query = $this->db->query($sql, $bind);
+				// echo $this->db->last_query();
 				$error = $this->db->error();
 				if($error['message'] !="")
 				{

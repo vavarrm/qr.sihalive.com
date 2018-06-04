@@ -13,12 +13,31 @@
 				<br>
 				<form   action="{{data.form.action}}" method="post" class="form-horizontal form-label-left" >
 					<div class="form-group" >
+						<label class="control-label col-md-3 col-sm-3 col-xs-6" >TukTuk/Pass app</label>
+						<div class="col-md-2">
+							TukTuk：<input name="type"   ng-model="data.form.type" type="radio" value="TukTuk" required>
+							Pass app：<input  name="type" ng-model="data.form.type" type="radio" value="Passapp" required>
+						</div>
+					</div>
+					<div class="form-group" ng-show="data.form.type =='TukTuk'">
 						<input name="id" type="hidden" value="{{data.form.id}}"> 
 						<label class="control-label col-md-3 col-sm-3 col-xs-6" >TukTuk</label>
 						<div class="col-md-2">
 							<select name="tuktukid">
 								<option ng-repeat=" option in data.form.info" value="{{option.id}}" ng-bind="option.name+'-'+option.phone"></option> 
 							</select>
+						</div>
+					</div>
+					<div class="form-group" ng-show="data.form.type =='Passapp'">
+						<label class="control-label col-md-3 col-sm-3 col-xs-6" >Pass Number</label>
+						<div class="col-md-2">
+							<input name="PassappNumber" class="form-control">
+						</div>
+					</div>
+					<div class="form-group" ng-show="data.form.type =='Passapp'">
+						<label class="control-label col-md-3 col-sm-3 col-xs-6" >Pass Phone</label>
+						<div class="col-md-2">
+							<input name="PassappPhone" class="form-control">
 						</div>
 					</div>
 					<div class="form-group">

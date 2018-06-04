@@ -98,8 +98,9 @@ class Api extends CI_Controller {
 			}
 			$output['message'] = $this->response_code['202']; 
 			$ary =array(
-				'action'	=>'uploadFixedQr',
-				'to'		=>'system'
+				'action'	=>'callAdminCallTukTuk',
+				'to'		=>'system',
+				'content'	=>''
 			);
 			$output['body']['socketPush'] = $this->socketIO->push($ary);
 		}catch(MyException $e)
@@ -121,6 +122,7 @@ class Api extends CI_Controller {
 		$output['body']=array();
 		$output['status'] = '200';
 		$output['title'] ='';
+		// $output['']
 		try 
 		{
 			
@@ -148,6 +150,7 @@ class Api extends CI_Controller {
 			
 			$output['body'] = $code ;
 			$output['message'] =  $this->response_code['203']; 
+			// echo $this->response_code['203'];
 
 		}catch(MyException $e)
 		{

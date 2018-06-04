@@ -17,6 +17,6 @@
 <IfModule mod_rewrite.c>
     RewriteEngine on
     RewriteBase /Api
-    RewriteCond $1 !^(index\.php|PHPMailer-master|production|build|vendors|demo|admin|static|images|swf|third_party|uploads|js|css|assets|fonts|font-awesome|robots\.txt|$)
+    RewriteCond $1 !^(index\.php|PHPMailer-master|mp3|production|build|vendors|demo|admin|static|images|swf|third_party|uploads|js|css|assets|fonts|font-awesome|robots\.txt|$)
     RewriteRule ^(.*)$ /Api/index.php/$1 [L,QSA]	
 </IfModule>

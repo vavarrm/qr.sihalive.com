@@ -108,9 +108,12 @@
 			$output = array();
 			try
 			{
-				$sql =" UPDATE `user_delivery` SET `tuktuk_id` = ? , `status` = 'calltuktuk' WHERE `user_delivery`.`id` = ?";
+				$sql =" UPDATE `user_delivery` SET `tuktuk_id` = ? ,type=?,passapp_number=?,passapp_phone=?, `status` = 'tuktukgo' WHERE `user_delivery`.`id` = ?";
 				$bind =array(
 					$ary['tuktukid'],
+					$ary['type'],
+					$ary['PassappNumber'],
+					$ary['PassappPhone'],
 					$ary['id'],
 				);
 
@@ -162,13 +165,13 @@
 							tt.id AS tuktuk_id
 						FROM 
 							user_delivery as ud LEFT JOIN  tuktuk AS tt ON ud.tuktuk_id = tt.id
-						WHERE   ud.status != 'end' AND user_id = ? ORDER BY add_datetime DESC LIMIT 1";
+						WHERE    user_id = ? ORDER BY add_datetime DESC LIMIT 1";
 				$bind= array(
 					$ary['id'],
 				);
 				
 				$query = $this->db->query($sql, $bind);
-				
+				// echo $this->db->last_query();
 				$error = $this->db->error();
 				if($error['message'] !="")
 				{
@@ -472,7 +475,7 @@
 						WHERE 
 							qrcode_id = ?  
 							AND user_id =?
-							AND status !='end'
+							AND status ='processing'
 						) AS t";
 				$bind= array(
 					$ary['qrcode_id'],
@@ -494,7 +497,7 @@
 				}
 				$row = $query->row_array();
 				$query->free_result();
-				if($row['m'] <=1 && $row['m'] != null)
+				if($row['m'] <=10 && $row['m'] != null)
 				{
 					$status ='014';
 					$MyException = new MyException();

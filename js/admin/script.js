@@ -80,6 +80,7 @@ var bodyCtrl = function($scope, $compile, $cookies, apiService, Websokect)
 	$scope.socket_push_data ={};
 	$scope.templates ={};
 	$scope.sidebarMenuList={};
+	$scope.playSound = false;
 	
 	
 	$scope.sidebar_menu_click = function(control, child)
@@ -106,38 +107,7 @@ var bodyCtrl = function($scope, $compile, $cookies, apiService, Websokect)
 	}
 	
 	
-
-	$scope.update_data = function(data)
-	{
-		data = (angular.fromJson(data));
-		$scope.$apply(function() {
-			$scope.socket_push_data  = data;
-		});
-	}
-	
-	$scope.uploadFixedQr = function(data)
-	{
-		data = (angular.fromJson(data));
-		$scope.$apply(function() {
-			$scope.socket_push_data.newfixedQr  = data;
-		});
-	}
-
-
-	// $scope.$watch('socket_push_data.order_total', function(newValue, oldValue) {
-		// 這裡輸入觸發$watch之後，欲觸發的行為
-		// if(typeof newValue !="undefined" && typeof oldValue!="undefined")
-		// {
-			// if(newValue >=oldValue)
-			// {
-				// $scope.socket_push_data.order_total_add = true;
-			// }else
-			// {
-				// $scope.socket_push_data.order_total_add = false;
-			// }
-		// }
-		
-	// },true);
+	var socket = Websokect.open();
 	$scope.init = function()
 	{
 		var promise = apiService.adminApi('AdminApi','getUser');
@@ -149,7 +119,7 @@ var bodyCtrl = function($scope, $compile, $cookies, apiService, Websokect)
 				if(r.data.status =="200")
 				{
 					$scope.sidebarMenuList = r.data.body.menu_list;
-					$scope.socket_push_data = r.data.body.socket_push_data;
+					$scope.socket_push_data.top = r.data.body.socket_push_data;
 					$scope.admin = r.data.body.admin_user;
 					$scope.sidebar_menu_click($scope.sidebarMenuList[0].pe_control, $scope.sidebarMenuList[0].child[0]);
 				}else if(r.data.status =="006")
@@ -175,14 +145,12 @@ var bodyCtrl = function($scope, $compile, $cookies, apiService, Websokect)
 					};
 					dialog(obj);
 				}
-				var socket = Websokect.open();
+			
 
 				var uid = 'system';
 				socket.on('connect', function(){
 					socket.emit('login', uid);
 				});
-				socket.on('update_data',$scope.update_data);
-				socket.on('uploadFixedQr',$scope.uploadFixedQr);
 			},
 			function() {
 				var obj ={
@@ -194,6 +162,65 @@ var bodyCtrl = function($scope, $compile, $cookies, apiService, Websokect)
 		
 	}
 	
+	
+	$scope.processingCount = function(data)
+	{
+		data = (angular.fromJson(data));
+		$scope.$apply(function() {
+			$scope.socket_push_data.top  = data;
+			if(data.processingCount.value > 0 && $scope.playSound == false)
+			{
+				$.playSound("/mp3/calltuktulk.mp3");
+				var obj ={
+					'message' :'Customer Call TukTuk',
+					buttons: [
+						{
+							text: "close",
+							click: function() {
+								$.stopSound();
+								$scope.playSound = false;
+								$( this ).dialog( "close" );
+								
+							}
+						}
+					]
+				};
+				dialog(obj);
+			}
+		});
+	}
+	socket.on('processingCount',$scope.processingCount);
+	
+
+	
+	$scope.callAdminCallTukTuk = function()
+	{
+	
+		if($scope.playSound == false)
+		{
+			$scope.playSound = true;
+		}
+		$.playSound("/mp3/calltuktulk.mp3");
+		var obj ={
+			'message' :'Customer Call TukTuk',
+			buttons: [
+				{
+					text: "close",
+					click: function() {
+						$.stopSound();
+						$scope.playSound = false;
+						$( this ).dialog( "close" );
+						// window.location.reload();
+					}
+				}
+			]
+		};
+		dialog(obj);
+	}
+	socket.on('callAdminCallTukTuk',$scope.callAdminCallTukTuk);
+	
+	
+	 
 	$scope.sidebarMenuListInit = function()
 	{	
 		$SIDEBAR_MENU = $("#sidebar-menu");
@@ -218,8 +245,10 @@ var bodyCtrl = function($scope, $compile, $cookies, apiService, Websokect)
 	
 }
 
-var MainController = function($scope, $routeParams, apiService, $templateCache, $compile, $cookies)
+var MainController = function($scope, $routeParams, apiService, $templateCache, $compile, $cookies,Websokect)
 {
+	
+	var socket = Websokect.open();
 	$templateCache.removeAll();
 	$scope.data =
 	{
@@ -235,10 +264,14 @@ var MainController = function($scope, $routeParams, apiService, $templateCache, 
 		pe_id :$routeParams.pe_id,
 		tabindex: $routeParams.tabindex,
 		table_action_list :{},
-		row:{}
+		row:{},
+		socket_push_data:{}
 	};
 	$scope.user_terminal = user_terminal;
 
+
+	
+	
 	$scope.actionClick = function(row,id)
 	{
 		// console.log(row);
@@ -738,7 +771,7 @@ var loginCtrl = function($scope, $cookies, apiService)
 				if(r.data.status =="200")
 				{
 					$scope.sess = r.data.body.sess;
-					$cookies.put('admin_sess', $scope.sess, { path: '/'});
+					$cookies.put('admin_sess', $scope.sess, { path: '/' ,expires:new Date(new Date().getTime()+6000*60*24*14)});
 					var obj =
 					{
 						'message':'welcome',
@@ -767,7 +800,7 @@ var loginCtrl = function($scope, $cookies, apiService)
 
 adminApp.controller('bodyCtrl',  ['$scope', '$compile', '$cookies' ,'apiService' ,'Websokect' , bodyCtrl])
 adminApp.controller('loginCtrl',  ['$scope', '$cookies' ,'apiService', loginCtrl]);
-adminApp.controller('MainController',  ['$scope' ,'$routeParams', 'apiService' ,'$templateCache', '$compile', '$cookies', MainController])
+adminApp.controller('MainController',  ['$scope' ,'$routeParams', 'apiService' ,'$templateCache', '$compile', '$cookies','Websokect', MainController])
 
 
 

@@ -1,4 +1,4 @@
-<div ng-init="init('registerQrForm')">
+<div ng-init="init('registerQrForm');userinit()">
 	<div  ng-include="'/views/nav.html'"></div>
 	<div class="container" ng-show="data.step==1">
 		<div class="this-container">
@@ -52,6 +52,7 @@
 	<div class="container" ng-show="data.step==3" ng-include="'/views/calltuktuk.html'"></div>
 	<div  ng-show="data.step==4"  ng-include="'/views/processing.html'"></div>
 	<div  ng-show="data.step==5"  ng-include="'/views/wait.html'"></div>
+	<div  ng-show="data.step==6"  ng-include="'/views/buyticket.html'"></div>
 </div>
 <footer class="fixed-bottom">
 	<div  ng-include="'/views/footer.html'"></div>

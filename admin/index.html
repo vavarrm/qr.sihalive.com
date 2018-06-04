@@ -110,7 +110,7 @@
 			<!-- page content -->
 			<div class="right_col" role="main" ng-show="panelShow">
 				<div class="row tile_count">
-					<div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count" ng-repeat="(key,row) in socket_push_data">
+					<div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count" ng-repeat="(key,row) in socket_push_data.top">
 						<span class="count_top" ng-bind="key+':'"></span>
 						<div class="count"  ng-class="socket_push_data.order_total_add == true?'red':''" ng-bind="row.value"></div>
 					</div>
@@ -127,9 +127,13 @@
 			<!-- /page content -->
 		</div>
     </div>
+	<audio id="carteSoudCtrl1">
+		<source src="/mp3/calltuktulk.mp3" type="audio/mpeg">
+	</audio>
 	<div ng-include="'/admin/views/dialog.html'"></div>
 	<!-- jquery -->
 	<script src="/vendors/jquery/dist/jquery.min.js"></script>
+	<script src="/js/jquery.playSound.js"></script>
     <!-- Bootstrap -->
     <script src="/vendors/bootstrap/dist/js/bootstrap.min.js"></script>
 	<!-- jQuery UI -->
@@ -146,7 +150,7 @@
 	<!-- iCheck -->
     <script src="/vendors/iCheck/icheck.min.js"></script>
 	<!-- gmap -->
-	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA66yV4atZJx0ELMs8MFzefwk1CtqAJCJo"></script>
+	<!-- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA66yV4atZJx0ELMs8MFzefwk1CtqAJCJo"></script> -->
 	<!-- angular -->
 	<script src="/js/angular/angular.min.js"></script>
 	<script src="/js/angular/angular-route.min.js"></script>

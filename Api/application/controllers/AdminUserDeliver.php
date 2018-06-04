@@ -101,6 +101,28 @@ class AdminUserDeliver extends CI_Controller
                 throw $MyException;
             }
 			$row = $this->delivery->confirm($this->post);
+			
+			if($this->post['status'] =="cancel")
+			{
+				$delivery =$this->delivery->getRowByID($this->post['id']);
+				$to = $delivery['user_id'];
+				$push_api_url  ="http://".$_SERVER['HTTP_HOST'].":2121/";
+				$post_data = array(
+				   "type" => "publish",
+				   "action"	=>"CallUserCancel",
+				   "to" => $to,
+				   'content'	=>json_encode($delivery )
+				);
+				$ch = curl_init ();
+				curl_setopt ( $ch, CURLOPT_URL, $push_api_url );
+				curl_setopt ( $ch, CURLOPT_POST, 1 );
+				curl_setopt ( $ch, CURLOPT_HEADER, 0 );
+				curl_setopt ( $ch, CURLOPT_RETURNTRANSFER, 1 );
+				curl_setopt ( $ch, CURLOPT_POSTFIELDS, $post_data );
+				curl_setopt ($ch, CURLOPT_HTTPHEADER, array("Expect:"));
+				$return = curl_exec ( $ch );
+				curl_close ( $ch );
+			}
 
         }catch(MyException $e)
         {
@@ -156,7 +178,8 @@ class AdminUserDeliver extends CI_Controller
         try
         {
             if(
-                empty($this->post['tuktukid']) ||
+                (empty($this->post['tuktukid']) && $this->post['type'] =='TukTuk') ||
+                ((empty($this->post['PassappPhone']) ||  empty($this->post['PassappNumber']) ) && $this->post['type'] =='Passapp') ||
                 empty($this->post['id']) 
             )
             {
@@ -175,7 +198,7 @@ class AdminUserDeliver extends CI_Controller
 				$push_api_url  ="http://".$_SERVER['HTTP_HOST'].":2121/";
 				$post_data = array(
 				   "type" => "publish",
-				   "action"	=>"CallTukTukPush",
+				   "action"	=>"CallTukTukGo",
 				   "to" => $to,
 				   'content'	=>json_encode($delivery )
 				);
@@ -188,7 +211,32 @@ class AdminUserDeliver extends CI_Controller
 				curl_setopt ($ch, CURLOPT_HTTPHEADER, array("Expect:"));
 				$return = curl_exec ( $ch );
 				curl_close ( $ch );
-				echo $return ;
+				// echo $return ;
+				
+				// $delivery =$this->delivery->getRowByID($this->post['id']);
+				$to = $delivery['user_id'];
+				if ($delivery['type'] =="Passapp")
+				{
+					$delivery['tuktuk_id'] = $delivery['passapp_number'];
+					$delivery['phone'] = $delivery['passapp_phone'];
+				}
+				$push_api_url  ="http://".$_SERVER['HTTP_HOST'].":2121/";
+				$post_data = array(
+				   "type" => "publish",
+				   "action"	=>"CallUserTukTukGo",
+				   "to" => $to,
+				   'content'	=>json_encode($delivery )
+				);
+				$ch = curl_init ();
+				curl_setopt ( $ch, CURLOPT_URL, $push_api_url );
+				curl_setopt ( $ch, CURLOPT_POST, 1 );
+				curl_setopt ( $ch, CURLOPT_HEADER, 0 );
+				curl_setopt ( $ch, CURLOPT_RETURNTRANSFER, 1 );
+				curl_setopt ( $ch, CURLOPT_POSTFIELDS, $post_data );
+				curl_setopt ($ch, CURLOPT_HTTPHEADER, array("Expect:"));
+				$return = curl_exec ( $ch );
+				curl_close ( $ch );
+				// echo $return 
 			}
 
         }catch(MyException $e)

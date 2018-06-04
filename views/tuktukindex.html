@@ -199,6 +199,8 @@ label, input { display:block; }
 		  }
 		});
 	}
+	
+
 
 	function makeMarker( position, icon, title ) 
 	{
@@ -211,23 +213,32 @@ label, input { display:block; }
 		return marker;
 	}
 	
-	if (navigator.geolocation) 
-	{
-		navigator.geolocation.getCurrentPosition(function(position) {
-            var pos = {
-              lat: position.coords.latitude,
-              lng: position.coords.longitude
-            };
-			makeMarker( pos, icons.tuktuk, 'title' );
+	
+	google.maps.event.addListener(map, 'click', function( event ){
+		<!-- alert( "Latitude: "+event.latLng.lat()+" "+", longitude: "+event.latLng.lng() );  -->
+		console.log(event.latLng.lat());
+		console.log(event.latLng.lng());
+	});
+	
+
+	
+	<!-- if (navigator.geolocation)  -->
+	<!-- { -->
+		<!-- navigator.geolocation.getCurrentPosition(function(position) { -->
+            <!-- var pos = { -->
+              <!-- lat: position.coords.latitude, -->
+              <!-- lng: position.coords.longitude -->
+            <!-- }; -->
+			<!-- makeMarker( pos, icons.tuktuk, 'title' ); -->
             <!-- infoWindow.setPosition(pos); -->
             <!-- infoWindow.setContent('Location found.'); -->
             <!-- map.setCenter(pos); -->
-          }, function() {
-				handleLocationError(true, infoWindow, map.getCenter());
-          });
-	} else {
+          <!-- }, function() { -->
+				<!-- handleLocationError(true, infoWindow, map.getCenter()); -->
+          <!-- }); -->
+	<!-- } else { -->
           // Browser doesn't support Geolocation
           <!-- handleLocationError(false, infoWindow, map.getCenter()); -->
-		  console.log('d');
-	}
+		  <!-- console.log('d'); -->
+	<!-- } -->
 </script>

@@ -113,7 +113,7 @@
     var lat="0",lag="0",titel="New Casino ";
 
     $('#us3-title').val(titel);
-    jQuery(window).on("load", function(){
+	$( document ).ready(function() {
         if (!navigator.geolocation){
             output.innerHTML = "<p>Geolocation is not supported by your browser</p>";
             return;

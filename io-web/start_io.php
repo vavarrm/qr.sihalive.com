@@ -83,14 +83,20 @@ $sender_io->on('workerStart', function(){
                 $to = @$_POST['to'];
                 $content = json_decode($_POST['content']);
                 $action = htmlspecialchars(@$_POST['action']);
-				echo    $action ;
+
 				switch($action)
 				{
-					case 'TukTukgo':
+					case 'CallUserTukTukGo':
 						$to="user".$to;
 					break;
-					case 'CallTukTukPush':
+					case 'CallUserCancel':
+						$to="user".$to;
+					break;
+					case 'CallTukTukGo':
 						$to="tuktuk".$to;
+					break;
+					case 'callAdminCallTukTuk':
+						$to="system";
 					break;
 				}
 				$sender_io->to($to)->emit($action, json_encode($content));
@@ -112,10 +118,10 @@ $sender_io->on('workerStart', function(){
         global $uidConnectionMap, $sender_io, $last_online_count, $last_online_page_count,$db;
         $online_count_now = count($uidConnectionMap);
         $online_page_count_now = array_sum($uidConnectionMap);
-		$row= $db->row("SELECT COUNT(*) AS value FROM user_delivery WHERE status='start'");
-		$ary['newfixedQr'] = $row;
+		$row= $db->row("SELECT COUNT(*) AS value FROM user_delivery WHERE status='processing'");
+		$ary['processingCount'] = $row;
 		$json = json_encode($ary);
-		$sender_io->emit('update_data', $json);
+		$sender_io->to('system')->emit('processingCount', $json);
     });
 });
 

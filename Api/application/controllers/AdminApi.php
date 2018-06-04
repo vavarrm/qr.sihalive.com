@@ -128,10 +128,10 @@ class AdminApi extends CI_Controller {
 				throw $MyException;
 			}
 	
-			$newfixedQr = $this->delivery->getCountByStatus('start');
+			$processingCount = $this->delivery->getCountByStatus('processing');
 			$output['body']['admin_user'] = $decrypt_data;
 			$output['body']['socket_push_data'] = array(
-				'newfixedQr'	=>$newfixedQr
+				'processingCount'	=>$processingCount
 			);
 			$data = $this->admin_user->getAdminMenuList($decrypt_data);
 			$output['body']['menu_list'] =$data['list'];
