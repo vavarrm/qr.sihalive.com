@@ -9,7 +9,7 @@ class Api extends CI_Controller {
 		parent::__construct();	
 		
 		$this->load->model('User_Model', 'user');
-		$this->load->model('UserVerifycode_Model', 'userVC');
+		$this->load->model('UserVerifyCode_Model', 'userVC');
 		$this->load->model('UserDelivery_Model', 'delivery');
 		$this->load->model('Qrcode_Model', 'qrcode');
 		
